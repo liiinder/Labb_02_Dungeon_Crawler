@@ -1,8 +1,8 @@
 ﻿class Wall : LevelElement
 {
-    public Wall(Position pos)
+    public Wall(Position position)
     {
-        ElementPos = pos;
+        Position = position;
         Color = ConsoleColor.White;
         Character = '#';
     }

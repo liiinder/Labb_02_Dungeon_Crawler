@@ -16,33 +16,33 @@
 
     public void Update(LevelData data)
     {
-        Position next = new Position(ElementPos.X, ElementPos.Y);
+        Position nextPosition = new Position(Position.X, Position.Y);
 
         ConsoleKeyInfo input = Console.ReadKey(true);
         
         if      (input.Key == ConsoleKey.Escape) Health = 0;
-        else if (input.Key == ConsoleKey.W || input.Key == ConsoleKey.UpArrow)      next.Y--;
-        else if (input.Key == ConsoleKey.A || input.Key == ConsoleKey.LeftArrow)    next.X--;
-        else if (input.Key == ConsoleKey.S || input.Key == ConsoleKey.DownArrow)    next.Y++;
-        else if (input.Key == ConsoleKey.D || input.Key == ConsoleKey.RightArrow)   next.X++;
+        else if (input.Key == ConsoleKey.W || input.Key == ConsoleKey.UpArrow)      nextPosition.Y--;
+        else if (input.Key == ConsoleKey.A || input.Key == ConsoleKey.LeftArrow)    nextPosition.X--;
+        else if (input.Key == ConsoleKey.S || input.Key == ConsoleKey.DownArrow)    nextPosition.Y++;
+        else if (input.Key == ConsoleKey.D || input.Key == ConsoleKey.RightArrow)   nextPosition.X++;
         else if (input.Key == ConsoleKey.I) Vision--;
         else if (input.Key == ConsoleKey.O) Vision++;
 
-        LevelElement nextElement = data.Elements.FirstOrDefault(x => x.ElementPos.Equals(next));
+        LevelElement elementAtNext = data.Elements.FirstOrDefault(x => x.Position.Equals(nextPosition));
 
-        if (nextElement is Wall) UpdateStatus(WallQuote());
-        else if (nextElement is Enemy enemy) Attack(enemy);
-        else if (nextElement is Torch torch)
+        if      (elementAtNext is Wall) UpdateStatus(WallQuote());
+        else if (elementAtNext is Enemy enemy) Attack(enemy);
+        else if (elementAtNext is Torch torch)
         {
-            torch.ElementPos = new Position(5, 0);
+            torch.Remove();
             Vision += 3;
-            UpdateStatus("You found a torch that will make it easier to explore the dungeon!");
-            Move(next);
+            UpdateStatus("You find a torch, its light flickering in the dark.");
+            MoveTo(nextPosition);
         }
         else
         {
             UpdateStatus();
-            Move(next);
+            MoveTo(nextPosition);
         }
     }
 

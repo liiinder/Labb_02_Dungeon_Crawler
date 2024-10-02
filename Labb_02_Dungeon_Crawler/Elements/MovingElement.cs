@@ -17,7 +17,7 @@
         
         defender.Health -= damageTaken;
 
-        if (defender is not Player && defender.Health <= 0) defender.Move(new Position(5, 0)); // Move to first whitespace char as list is read only within the assignments ruleset so cant change it.
+        if (defender is not Player && defender.Health <= 0) defender.Remove();
 
         string attacking = (this is Player) ? "You" : $"The {Name}";
         string defending = (defender is Player) ? "you" : $"the {defender.Name}";
@@ -32,17 +32,17 @@
 
         if (mainAttack && defender.Health > 0) defender.Attack(this, mainAttack: false);
     }
-    public void Move(Position next)
+    public void MoveTo(Position nextPosition)
     {
-        Erase();
-        ElementPos = next;
+        Hide();
+        Position = nextPosition;
     }
-    internal void UpdateStatus(string status = "", bool mainAttack = true)
+    internal void UpdateStatus(string status = "", bool bothFields = true)
     {
         if (this is Player) Console.ForegroundColor = Color;
         
-        Console.SetCursorPosition(0, (mainAttack) ? 1 : 2);
-        Console.Write(status.PadRight(Console.BufferWidth * (mainAttack ? 2 : 1)));
+        Console.SetCursorPosition(0, bothFields ? 1 : 2);
+        Console.Write(status.PadRight(Console.BufferWidth * (bothFields ? 2 : 1)));
         Console.ResetColor();
     }
 }

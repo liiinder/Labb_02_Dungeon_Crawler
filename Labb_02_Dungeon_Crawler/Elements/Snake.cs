@@ -1,8 +1,8 @@
 ﻿class Snake : Enemy
 {
-    public Snake(Position pos)
+    public Snake(Position position)
     {
-        ElementPos = pos;
+        Position = position;
         Color = ConsoleColor.Green;
         Character = 's';
         AttackDice = new Dice(3, 4, 2);
@@ -12,20 +12,20 @@
     }
     public override void Update(LevelData data)
     {
-        if (ElementPos.DistanceTo(data.ThePlayer.ElementPos) < 2)
+        if (Position.DistanceTo(data.Player.Position) < 2)
         {
-            Position next = new Position(ElementPos.X, ElementPos.Y);
-            if (ElementPos.X == data.ThePlayer.ElementPos.X)
+            Position nextPosition = new Position(Position.X, Position.Y);
+            if (Position.X == data.Player.Position.X)
             {
-                if (ElementPos.Y > data.ThePlayer.ElementPos.Y) next.Y++;
-                else next.Y--;
+                if (Position.Y > data.Player.Position.Y) nextPosition.Y++;
+                else nextPosition.Y--;
             }
-            else if (ElementPos.X > data.ThePlayer.ElementPos.X) next.X++;
-            else next.X--;
+            else if (Position.X > data.Player.Position.X) nextPosition.X++;
+            else nextPosition.X--;
 
-            LevelElement nextElement = data.Elements.FirstOrDefault(x => x.ElementPos.Equals(next));
+            LevelElement elementAtNext = data.Elements.FirstOrDefault(x => x.Position.Equals(nextPosition));
 
-            if (nextElement is null) Move(next);
+            if (elementAtNext is null) MoveTo(nextPosition);
         }
     }
 }

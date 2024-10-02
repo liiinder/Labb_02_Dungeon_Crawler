@@ -1,8 +1,8 @@
 ﻿class Torch : LevelElement
 {
-    public Torch(Position pos)
+    public Torch(Position position)
     {
-        ElementPos = pos;
+        Position = position;
         Color = ConsoleColor.DarkYellow;
         Character = '*';
     }

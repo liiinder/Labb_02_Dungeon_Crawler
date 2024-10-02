@@ -2,7 +2,7 @@
 {
     public Rat(Position pos)
     {
-        ElementPos = pos;
+        Position = pos;
         Color = ConsoleColor.Red;
         Character = 'r';
         AttackDice = new Dice(1, 6, 3);
@@ -14,17 +14,17 @@
     {
         if (Health > 0)
         {
-            Position next = new Position(ElementPos.X, ElementPos.Y);
+            Position nextPosition = new Position(Position.X, Position.Y);
             int dir = new Random().Next(4);
-            if      (dir == 0) next.Y--;
-            else if (dir == 1) next.X--;
-            else if (dir == 2) next.Y++;
-            else if (dir == 3) next.X++;
+            if      (dir == 0) nextPosition.Y--;
+            else if (dir == 1) nextPosition.X--;
+            else if (dir == 2) nextPosition.Y++;
+            else if (dir == 3) nextPosition.X++;
 
-            LevelElement nextElement = data.Elements.FirstOrDefault(x => x.ElementPos.Equals(next));
+            LevelElement elementAtNext = data.Elements.FirstOrDefault(x => x.Position.Equals(nextPosition));
 
-            if (nextElement is null) Move(next);
-            else if (nextElement is Player player) Attack(player);
+            if (elementAtNext is Player player) Attack(player);
+            else if (elementAtNext is null) MoveTo(nextPosition);
         }
     }
 }

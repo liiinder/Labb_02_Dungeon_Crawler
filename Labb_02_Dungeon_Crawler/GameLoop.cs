@@ -11,11 +11,11 @@
         level.Load("Levels\\Level1.txt");
         level.DrawPlayerVision();
 
-        for (turn = 0; level.ThePlayer.Health > 0; turn++)
+        for (turn = 0; level.Player.Health > 0; turn++)
         {
             PrintPlayerStatus();
 
-            level.ThePlayer.Update(level);
+            level.Player.Update(level);
 
             foreach (LevelElement enemy in level.Elements) (enemy as Enemy)?.Update(level);
 
@@ -28,8 +28,8 @@
     public void PrintPlayerStatus()
     {
         string status = (
-            $"Name: {level.ThePlayer.Name}  -  " +
-            $"Health: {level.ThePlayer.Health}/{level.ThePlayer.MaxHP}  -  " +
+            $"Name: {level.Player.Name}  -  " +
+            $"Health: {level.Player.Health}/{level.Player.MaxHP}  -  " +
             $"Turn: {turn}").PadRight(Console.BufferWidth);
 
         Console.SetCursorPosition(0, 0);
