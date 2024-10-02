@@ -1,4 +1,6 @@
-﻿class Dice
+﻿using System.Reflection.Metadata.Ecma335;
+
+class Dice
 {
     private int numberOfDice;
     private int sidesPerDice;
@@ -18,9 +20,5 @@
             sumOfThrows += new Random().Next(1, (sidesPerDice + 1));
         }
         return sumOfThrows + modifier;
-    }
-    public string Range()
-    {
-        return $"Lowest roll: {numberOfDice + modifier}, Highest roll: {numberOfDice * sidesPerDice + modifier}";
     }
 }

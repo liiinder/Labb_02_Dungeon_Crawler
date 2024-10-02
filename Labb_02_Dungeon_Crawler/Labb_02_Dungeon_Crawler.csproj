@@ -3,13 +3,19 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>Labb_2___Dungeon_Crawler</RootNamespace>
+    <RootNamespace>Labb_02_Dungeon_Crawler</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="Levels\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Levels\Level1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
