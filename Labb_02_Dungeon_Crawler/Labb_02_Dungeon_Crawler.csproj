@@ -9,10 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Levels\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <None Update="Levels\Debug.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Levels\Level1.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

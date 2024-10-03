@@ -13,5 +13,5 @@
         else if (a > 0) return a;
         return b;
     }
-    public bool InVision(Player player) => DistanceTo(player.Position) <= player.Vision;
+    public bool InVisionOf(Player player) => DistanceTo(player.Position) <= player.Vision && Y > 2;
 }

@@ -1,15 +1,15 @@
 ﻿abstract class LevelElement
 {
     public Position Position { get; set; }
-    public char Character { get; set; }
+    public char Icon { get; set; }
     public ConsoleColor Color { get; set; }
     public bool IsVisable { get; set; }
-    public void Draw(bool drawChar = true)
+    public void Draw(bool drawIcon = true)
     {
         Position.SetCursor();
         Console.ForegroundColor = Color;
-        Console.Write((drawChar) ? Character : ' ');
-        IsVisable = drawChar;
+        Console.Write((drawIcon) ? Icon : ' ');
+        IsVisable = drawIcon;
     }
     public void Hide() => Draw(false);
     public void Remove()

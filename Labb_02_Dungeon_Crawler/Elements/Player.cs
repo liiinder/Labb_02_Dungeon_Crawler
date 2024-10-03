@@ -1,49 +1,53 @@
 ﻿class Player : MovingElement
 {
-    public int MaxHP { get; private set; }
     public int Vision { get; set; }
+    public int MaxHP { get; private set; }
+    public int StatusBarTimer { get; set; }
+    public int DamageDone { get; set; }
+    public int Turn { get; private set; }
     public Player(string playerName)
     {
         Color = ConsoleColor.Yellow;
-        Character = '@';
-        AttackDice = new Dice(2, 6, 2);
-        DefenceDice = new Dice(2, 6, 0);
+        Icon = '&';
+        AttackDice = new Dice(1, 6, 1);
+        DefenceDice = new Dice(1, 6, 0);
         Health = 100;
         MaxHP = Health;
-        Name = playerName;
         Vision = 2;
+        Name = (playerName.Length <= 15) ? playerName : playerName[..15];
+        if (Name == "") Name = "Drax Ironfist";
     }
 
-    public void Update(LevelData data)
+    public bool Update(LevelData data)
     {
         Position nextPosition = new Position(Position.X, Position.Y);
 
         ConsoleKeyInfo input = Console.ReadKey(true);
         
-        if      (input.Key == ConsoleKey.Escape) Health = 0;
+        if      (input.Key == ConsoleKey.Escape) return false;
         else if (input.Key == ConsoleKey.W || input.Key == ConsoleKey.UpArrow)      nextPosition.Y--;
         else if (input.Key == ConsoleKey.A || input.Key == ConsoleKey.LeftArrow)    nextPosition.X--;
         else if (input.Key == ConsoleKey.S || input.Key == ConsoleKey.DownArrow)    nextPosition.Y++;
         else if (input.Key == ConsoleKey.D || input.Key == ConsoleKey.RightArrow)   nextPosition.X++;
-        else if (input.Key == ConsoleKey.I) Vision--;
-        else if (input.Key == ConsoleKey.O) Vision++;
 
         LevelElement elementAtNext = data.Elements.FirstOrDefault(x => x.Position.Equals(nextPosition));
 
         if      (elementAtNext is Wall) UpdateStatus(WallQuote());
         else if (elementAtNext is Enemy enemy) Attack(enemy);
-        else if (elementAtNext is Torch torch)
+        else if (elementAtNext is Item item)
         {
-            torch.Remove();
-            Vision += 3;
-            UpdateStatus("You find a torch, its light flickering in the dark.");
+            UpdateStatus(item.PickUp(this));
             MoveTo(nextPosition);
         }
         else
         {
-            UpdateStatus();
+            StatusBarTimer--;
+            if (StatusBarTimer == 0) UpdateStatus();
             MoveTo(nextPosition);
         }
+
+        Turn++;
+        return true;
     }
 
     private string WallQuote()

@@ -1,8 +1,12 @@
 ﻿Console.CursorVisible = false;
-Console.ResetColor();
+Console.BackgroundColor = ConsoleColor.Black;
+Console.ForegroundColor = ConsoleColor.Gray;
 
-new GameLoop().Start();
+string path = "Levels\\Level1.txt";
+string path2 = "Levels\\Debug.txt";
 
+new GameLoop().Start(path);
+
+Thread.Sleep(1000);
 Console.CursorVisible = true;
-Console.ResetColor();
-Console.SetCursorPosition(0, 21);
+Console.SetCursorPosition(0, Console.BufferHeight - 7);

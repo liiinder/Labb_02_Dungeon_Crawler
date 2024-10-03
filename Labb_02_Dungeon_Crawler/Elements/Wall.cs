@@ -4,6 +4,6 @@
     {
         Position = position;
         Color = ConsoleColor.White;
-        Character = '#';
+        Icon = '#';
     }
 }

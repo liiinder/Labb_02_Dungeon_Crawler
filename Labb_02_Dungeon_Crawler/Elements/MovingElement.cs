@@ -17,6 +17,7 @@
         
         defender.Health -= damageTaken;
 
+        if (this is Player player) player.DamageDone += damageTaken;
         if (defender is not Player && defender.Health <= 0) defender.Remove();
 
         string attacking = (this is Player) ? "You" : $"The {Name}";
@@ -39,9 +40,13 @@
     }
     internal void UpdateStatus(string status = "", bool bothFields = true)
     {
-        if (this is Player) Console.ForegroundColor = Color;
+        if (this is Player player)
+        {
+            Console.ForegroundColor = Color;
+            player.StatusBarTimer = 3;
+        }
         
-        Console.SetCursorPosition(0, bothFields ? 1 : 2);
+        Console.SetCursorPosition(1, bothFields ? 3 : 4);
         Console.Write(status.PadRight(Console.BufferWidth * (bothFields ? 2 : 1)));
         Console.ResetColor();
     }
