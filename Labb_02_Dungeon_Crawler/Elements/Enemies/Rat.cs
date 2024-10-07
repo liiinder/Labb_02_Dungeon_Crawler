@@ -9,18 +9,20 @@
         DefenceDice = new Dice(1, 6, 1);
         Health = 10;
         Name = "rat";
+        Vision = 0;
     }
-    public override void Update(LevelData data)
+    public override void Update()
     {
-        Position newPosition = new Position(Position.X, Position.Y);
+        Position newPosition = new Position(Position);
 
-        int randomDirection = new Random().Next(4);
-        if      (randomDirection == 0) newPosition.Y--;
-        else if (randomDirection == 1) newPosition.Y++;
-        else if (randomDirection == 2) newPosition.X--;
-        else if (randomDirection == 3) newPosition.X++;
+        string direction = Utils.GetRandom(["north", "east", "south", "west"]);
 
-        LevelElement elementAtNewPosition = data.Elements.FirstOrDefault(x => x.Position.Equals(newPosition));
+        if      (direction == "north") newPosition.Y--;
+        else if (direction == "east")  newPosition.X++;
+        else if (direction == "south") newPosition.Y++;
+        else if (direction == "west")  newPosition.X--;
+
+        LevelElement elementAtNewPosition = LevelData.Elements.FirstOrDefault(x => x.Position.Equals(newPosition));
 
         if (elementAtNewPosition is Player player) Attack(player);
         else if (elementAtNewPosition is null) MoveTo(newPosition);

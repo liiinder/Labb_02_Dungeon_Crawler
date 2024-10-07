@@ -1,69 +1,56 @@
 ﻿class Player : MovingElement
 {
-    public int Vision { get; set; }
-    public int MaxHP { get; private set; }
-    public int StatusBarTimer { get; set; }
     public int DamageDone { get; set; }
+    public int StatusBarTimer { get; set; }
+    public int MaxHP { get; private set; }
     public int Turn { get; private set; }
+
     public Player(string playerName)
     {
-        Color = ConsoleColor.Yellow;
+        Name = playerName;
         Icon = '&';
-        AttackDice = new Dice(1, 6, 1);
-        DefenceDice = new Dice(1, 6, 0);
         Health = 100;
-        MaxHP = Health;
         Vision = 2;
-        Name = (playerName.Length <= 15) ? playerName : playerName[..15];
-        if (Name == "") Name = "Drax Ironfist";
+        Color = ConsoleColor.Yellow;
+        AttackDice = new Dice(1, 6, 2);
+        DefenceDice = new Dice(1, 6, 0);
+        MaxHP = Health;
     }
 
-    public bool Update(LevelData data)
+    public bool Update()
     {
-        Position nextPosition = new Position(Position.X, Position.Y);
-
         ConsoleKeyInfo input = Console.ReadKey(true);
         
-        if      (input.Key == ConsoleKey.Escape) return false;
-        else if (input.Key == ConsoleKey.W || input.Key == ConsoleKey.UpArrow)      nextPosition.Y--;
-        else if (input.Key == ConsoleKey.A || input.Key == ConsoleKey.LeftArrow)    nextPosition.X--;
-        else if (input.Key == ConsoleKey.S || input.Key == ConsoleKey.DownArrow)    nextPosition.Y++;
-        else if (input.Key == ConsoleKey.D || input.Key == ConsoleKey.RightArrow)   nextPosition.X++;
+        if (input.Key == ConsoleKey.Escape) return false;
 
-        LevelElement elementAtNext = data.Elements.FirstOrDefault(x => x.Position.Equals(nextPosition));
+        Position newPosition = new Position(Position);
 
-        if      (elementAtNext is Wall) UpdateStatus(WallQuote());
-        else if (elementAtNext is Enemy enemy) Attack(enemy);
-        else if (elementAtNext is Item item)
+        if      (input.Key == ConsoleKey.W || input.Key == ConsoleKey.UpArrow)      newPosition.Y--;
+        else if (input.Key == ConsoleKey.A || input.Key == ConsoleKey.LeftArrow)    newPosition.X--;
+        else if (input.Key == ConsoleKey.S || input.Key == ConsoleKey.DownArrow)    newPosition.Y++;
+        else if (input.Key == ConsoleKey.D || input.Key == ConsoleKey.RightArrow)   newPosition.X++;
+
+        LevelElement nextElement = LevelData.Elements.FirstOrDefault(x => x.Position.Equals(newPosition));
+
+        if      (nextElement is Wall) UpdateStatusBar(Print.GetWallQuote()); //TODO: Clean this? (with new queue printstatus...)
+        else if (nextElement is Enemy enemy) Attack(enemy);
+        else if (nextElement is Item item)
         {
-            UpdateStatus(item.PickUp(this));
-            MoveTo(nextPosition);
+    //TODO: Move the UpdateStatusBar from Moving element to Print and call it directly from item.PickUp / attack etc.
+            UpdateStatusBar(item.PickUp());
+            MoveTo(newPosition);
         }
         else
         {
-            StatusBarTimer--;
-            if (StatusBarTimer == 0) UpdateStatus();
-            MoveTo(nextPosition);
+            //TODO: Maybe change print class to not static, add a turn timer there instead...?
+            StatusBarTimer--; 
+            //TODO: Maybe fix another way of having the statusbar cleared?
+            if (StatusBarTimer == 0) UpdateStatusBar(); //TODO: Maybe fix a separate clear statusbar?
+            MoveTo(newPosition);
         }
 
         Turn++;
-        return true;
-    }
 
-    private string WallQuote()
-    {
-        string[] quotes = {
-            "You thud against the cold stone.",
-            "The wall stands firm, unyielding.",
-            "Dust swirls as you bump the surface.",
-            "A faint whisper echoes from the wall.",
-            "Your shoulder meets solid rock.",
-            "The wall mocks your attempts to pass.",
-            "A dull thump reverberates in the air.",
-            "You stumble back, the wall unmoved.",
-            "The ancient stone holds its secrets tight.",
-            "Rubbing your forehead, you realize it’s a dead end."
-        };
-        return quotes[new Random().Next(quotes.Length)];
+        return Health > 0;
     }
 }

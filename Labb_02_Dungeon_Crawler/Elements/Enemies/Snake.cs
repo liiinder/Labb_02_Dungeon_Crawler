@@ -9,21 +9,22 @@
         DefenceDice = new Dice(1, 8, 5);
         Health = 25;
         Name = "snake";
+        Vision = 1.5;
     }
-    public override void Update(LevelData data)
+    public override void Update()
     {
-        if (Position.DistanceTo(data.Player.Position) < 2)
+        if (HasVisualOn(LevelData.Player))
         {
             Position newPosition = new Position(Position.X, Position.Y);
-            if (Position.X == data.Player.Position.X)
+            if (Position.X == LevelData.Player.Position.X)
             {
-                if (Position.Y > data.Player.Position.Y) newPosition.Y++;
+                if (Position.Y > LevelData.Player.Position.Y) newPosition.Y++;
                 else newPosition.Y--;
             }
-            else if (Position.X > data.Player.Position.X) newPosition.X++;
+            else if (Position.X > LevelData.Player.Position.X) newPosition.X++;
             else newPosition.X--;
 
-            LevelElement elementAtNewPosition = data.Elements.FirstOrDefault(x => x.Position.Equals(newPosition));
+            LevelElement elementAtNewPosition = LevelData.Elements.FirstOrDefault(x => x.Position.Equals(newPosition));
 
             if (elementAtNewPosition is null) MoveTo(newPosition);
         }

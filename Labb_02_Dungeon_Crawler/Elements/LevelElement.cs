@@ -1,9 +1,9 @@
 ﻿abstract class LevelElement
 {
-    public Position Position { get; set; }
-    public char Icon { get; set; }
-    public ConsoleColor Color { get; set; }
     public bool IsVisable { get; set; }
+    public Position Position { get; set; }
+    public char Icon { get; protected set; }
+    public ConsoleColor Color { get; protected set; }
     public void Draw(bool drawIcon = true)
     {
         Position.SetCursor();
@@ -15,6 +15,6 @@
     public void Remove()
     {
         Hide();
-        Position = new Position(5, 0);
+        LevelData.deathRow.Enqueue(this);
     }
 }

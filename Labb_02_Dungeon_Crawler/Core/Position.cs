@@ -3,6 +3,7 @@
     public int X { get; set; }
     public int Y { get; set; }
     public Position(int x, int y) { X = x; Y = y; }
+    public Position(Position pos) { X = pos.X; Y = pos.Y; }
     public void SetCursor() => Console.SetCursorPosition(X, Y);
     public double DistanceTo(Position pos)
     {
@@ -13,5 +14,5 @@
         else if (a > 0) return a;
         return b;
     }
-    public bool InVisionOf(Player player) => DistanceTo(player.Position) <= player.Vision && Y > 2;
+    public double DistanceTo(LevelElement element) => DistanceTo(element.Position);
 }

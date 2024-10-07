@@ -1,6 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-
-class Dice
+﻿class Dice
 {
     private int numberOfDice;
     private int sidesPerDice;
@@ -17,7 +15,7 @@ class Dice
         int sumOfThrows = 0;
         for (int i = 0; i < numberOfDice; i++)
         {
-            sumOfThrows += new Random().Next(1, (sidesPerDice + 1));
+            sumOfThrows += new Random().Next(sidesPerDice) + 1;
         }
         return sumOfThrows + modifier;
     }
