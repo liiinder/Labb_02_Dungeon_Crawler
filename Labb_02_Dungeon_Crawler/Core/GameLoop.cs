@@ -26,11 +26,11 @@
             Status.Print();
         }
 
-        Print.PlayerStatus();
-
+        //Print.PlayerStatus();
+        Console.Clear();
         if (killedAllEnemies) Print.Victory();
         else Print.GameOver();
-        //HighScore.PrintEndScore();
+        HighScore.FinalScore();
 
         Console.ReadKey(true);
     }

@@ -31,8 +31,8 @@
         string defending = (defender is Player) ? "you" : $"the {defender.Name}";
         string defendersHP = (defender.Health > 0) ? $"{defender.Health} hp left." : $"{defending} died.";
 
-        string message = $" {attacking} ({AttackDice} => {attackThrow}) attacked " +
-                       $"{defending} ({defender.DefenceDice} => {defenceThrow})";
+        string message = $" {attacking} attacked ({AttackDice} => {attackThrow})" +
+                       $" {defending} ({defender.DefenceDice} => {defenceThrow})";
                        
         string damage = $" {attacking} hit {defending} for {damageTaken} damage, {defendersHP}";
 

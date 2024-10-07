@@ -144,7 +144,7 @@ static class Print
         for (int y = 0; y < banner.Length; y++)
         {
             int x = (Console.BufferWidth - banner[y].Length) / 2;
-            Console.SetCursorPosition(x, y + 6);
+            Console.SetCursorPosition(x, y + 3);
             foreach (char c in banner[y])
             {
                 if (c == ' ') Color = ConsoleColor.DarkGray;

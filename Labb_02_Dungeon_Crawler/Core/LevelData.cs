@@ -4,18 +4,19 @@
     public static List<LevelElement> Elements { get => _elements; }
     public static Player Player { get; set; }
 
+    public static string Path { get; set; }
+
     public static Queue<LevelElement> deathRow = new Queue<LevelElement>();
 
     public LevelData(string playerName) => Player = new Player(playerName);
 
     public static void Load(string pathToFile)
     {
-        if (!File.Exists(pathToFile))
-        {
-            throw new FileNotFoundException($"File not found: {pathToFile}");
-        }
+        Path = pathToFile;
 
-        using (FileStream stream = File.OpenRead(pathToFile))
+        if (!File.Exists(Path)) throw new FileNotFoundException($"File not found: {Path}");
+
+        using (FileStream stream = File.OpenRead(Path))
         {
             byte[] data = new byte[stream.Length];
             stream.Read(data);
