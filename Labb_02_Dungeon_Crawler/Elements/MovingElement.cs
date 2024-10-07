@@ -20,6 +20,7 @@
         int attackThrow = AttackDice.Throw();
         int defenceThrow = defender.DefenceDice.Throw();
         int damageTaken = Math.Max(0, attackThrow - defenceThrow);
+        ConsoleColor color = ConsoleColor.Yellow;
         
         defender.Health -= damageTaken;
 
@@ -30,32 +31,22 @@
         string defending = (defender is Player) ? "you" : $"the {defender.Name}";
         string defendersHP = (defender.Health > 0) ? $"{defender.Health} hp left." : $"{defending} died.";
 
-        string message = $"{attacking} (ATK: {AttackDice} => {attackThrow}) attacked " +
-                       $"{defending} (DEF: {defender.DefenceDice} => {defenceThrow}), " +
-                       $"{attacking} hit {defending} for {damageTaken} damage, {defendersHP}";
+        string message = $" {attacking} ({AttackDice} => {attackThrow}) attacked " +
+                       $"{defending} ({defender.DefenceDice} => {defenceThrow})";
+                       
+        string damage = $" {attacking} hit {defending} for {damageTaken} damage, {defendersHP}";
 
-        Console.ForegroundColor = (damageTaken > 0) ? ConsoleColor.Red : ConsoleColor.Green;
-        UpdateStatusBar(message, mainAttack); //TODO: Enqueue message instead...
+        if (this is not Player) color = (damageTaken > 0) ? ConsoleColor.Red : ConsoleColor.Green;
+
+        Status.Add(message, color);
+        Status.Add(damage, color);
 
         if (mainAttack && defender.Health > 0) defender.Attack(this, mainAttack: false);
+        else Status.AddLine();
     }
     public void MoveTo(Position newPosition)
     {
         Hide();
         Position = newPosition;
-    }
-    
-    //TODO: work on moving this to Print
-    internal void UpdateStatusBar(string status = "", bool bothFields = true)
-    {
-        if (this is Player player)
-        {
-            Console.ForegroundColor = Color;
-            player.StatusBarTimer = 3;
-        }
-        
-        Console.SetCursorPosition(1, bothFields ? 3 : 4);
-        Console.Write(status.PadRight(Console.BufferWidth * (bothFields ? 2 : 1)));
-        Console.ResetColor();
     }
 }

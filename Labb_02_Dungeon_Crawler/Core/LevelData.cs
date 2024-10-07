@@ -20,7 +20,7 @@
             byte[] data = new byte[stream.Length];
             stream.Read(data);
 
-            int x = 3, y = 6;
+            int x = 3, y = 3;
             foreach (char c in data)
             {
                 if (c == '\n')

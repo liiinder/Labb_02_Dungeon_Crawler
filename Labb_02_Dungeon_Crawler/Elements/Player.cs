@@ -12,8 +12,8 @@
         Health = 100;
         Vision = 2;
         Color = ConsoleColor.Yellow;
-        AttackDice = new Dice(1, 6, 2);
-        DefenceDice = new Dice(1, 6, 0);
+        AttackDice = new Dice(1, 8, 2);     // 3 -> 10
+        DefenceDice = new Dice(1, 6, 2);    // 3 -> 8
         MaxHP = Health;
     }
 
@@ -32,25 +32,16 @@
 
         LevelElement nextElement = LevelData.Elements.FirstOrDefault(x => x.Position.Equals(newPosition));
 
-        if      (nextElement is Wall) UpdateStatusBar(Print.GetWallQuote()); //TODO: Clean this? (with new queue printstatus...)
+        if      (nextElement is Wall wall) Wall.Quote();
         else if (nextElement is Enemy enemy) Attack(enemy);
         else if (nextElement is Item item)
         {
-    //TODO: Move the UpdateStatusBar from Moving element to Print and call it directly from item.PickUp / attack etc.
-            UpdateStatusBar(item.PickUp());
+            item.PickUp();
             MoveTo(newPosition);
         }
-        else
-        {
-            //TODO: Maybe change print class to not static, add a turn timer there instead...?
-            StatusBarTimer--; 
-            //TODO: Maybe fix another way of having the statusbar cleared?
-            if (StatusBarTimer == 0) UpdateStatusBar(); //TODO: Maybe fix a separate clear statusbar?
-            MoveTo(newPosition);
-        }
+        else MoveTo(newPosition);
 
         Turn++;
-
         return Health > 0;
     }
 }

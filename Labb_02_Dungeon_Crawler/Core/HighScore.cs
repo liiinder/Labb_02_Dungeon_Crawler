@@ -7,7 +7,6 @@
         return Math.Max(0, score);
     }
 
-    //TODO: Implement a print that shows endscore.
     public static int GetEndScore()
     {
         bool dungeoneer = LevelData.Elements.All(x => (x is Wall w) ? w.IsVisable : true);
@@ -23,6 +22,11 @@
         if (loothoarder) score += 100;
 
         return score;
+    }
+
+    public static void PrintFinalScore()
+    {
+
     }
 
     //TODO: Add a Highscore print to PlayerStatus...

@@ -5,8 +5,8 @@
         Position = pos;
         Color = ConsoleColor.Red;
         Icon = 'r';
-        AttackDice = new Dice(1, 6, 3);
-        DefenceDice = new Dice(1, 6, 1);
+        AttackDice = new Dice(1, 6, 3);     // 4 -> 9
+        DefenceDice = new Dice(1, 6, 1);    // 2 -> 7
         Health = 10;
         Name = "rat";
         Vision = 0;

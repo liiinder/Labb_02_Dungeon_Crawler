@@ -5,8 +5,8 @@
         Position = position;
         Color = ConsoleColor.DarkMagenta;
         Icon = '*';
-        AttackDice = new Dice(1, 12, 0);
-        DefenceDice = new Dice(1, 6, 1);
+        AttackDice = new Dice(1, 8, 0);     // 1 -> 8
+        DefenceDice = new Dice(1, 6, 0);    // 1 -> 6
         Health = 5;
         Name = "spider";
         Vision = 1.5;
@@ -20,10 +20,10 @@
             {
                 var elementsNear = LevelData.Elements.Where(x => HasVisualOn(x)).ToList();
 
-                List<Position> newPositions = new List<Position>();
-
                 int newX = Math.Sign(LevelData.Player.Position.X - Position.X);
                 int newY = Math.Sign(LevelData.Player.Position.Y - Position.Y);
+
+                List<Position> newPositions = new List<Position>();
 
                 newPositions.Add(new Position(Position.X + newX, Position.Y + newY));
                 newPositions.Add(new Position(Position.X + newX, Position.Y));

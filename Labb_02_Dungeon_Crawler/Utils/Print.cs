@@ -1,7 +1,33 @@
-﻿static class Print
-{
-    //public static Queue<StatusMessage> messages = new Queue<StatusMessage>();
+﻿using static System.Net.Mime.MediaTypeNames;
 
+static class Print
+{
+    internal static void PlayerView()
+    {
+        foreach (var element in LevelData.Elements)
+        {
+            if (element is Enemy enemy && enemy.Health <= 0) continue;
+            else if (element is Wall && element.IsVisable) continue;
+            else if (LevelData.Player.HasVisualOn(element)) element.Draw();
+            else if (element.IsVisable) element.Hide();
+        }
+        Console.ResetColor();
+    }
+    internal static void PlayerStatus(int score)
+    {
+        Player player = LevelData.Player;
+        Console.ForegroundColor = ConsoleColor.Gray;
+
+        string status = (
+            $"Name: {player.Name}  -  Health: {player.Health}/{player.MaxHP}  -  " +
+            $"Turn: {player.Turn}  -  Score: {score}"
+        ).PadRight(Console.BufferWidth);
+
+        Console.SetCursorPosition(1, 1);
+        Console.Write(status);
+    }
+    internal static void PlayerStatus() => PlayerStatus(HighScore.GetScore());
+    
     /// <summary>
     /// Print intro banner and ask user for a playername.
     /// Then waits for a <c>Console.ReadLine()</c>
@@ -10,18 +36,20 @@
     internal static string Intro()
     {
         string[] intro = {
-          "                                                                           ",
-         "    @@@@@@@   @@   @@   @@@  @@    @@@@@@@   @@@@@@@    @@@@@@   @@@  @@     ",
-        "     @@@@@@@@  @@@  @@@  @@@@ @@@  @@@@@@@@@  @@@@@@@@  @@@@@@@@  @@@@ @@@     ",
-        "     @@!  @@@  @@!  @@@  @@!@!@@@  !@@        @@!       @@!  @@@  @@!@!@@@     ",
-        "     !@!  @!@  !@!  @!@  !@!!@!@!  !@!        !@!       !@!  @!@  !@!!@!@!     ",
-        "     @!@  !@!  @!@  !@!  @!@ !!@!  !@! @!@!@  @!!!:!    @!@  !@!  @!@ !!@!     ",
-        "     !@!  !!!  !@!  !!!  !@!  !!!  !!! !!@!!  !!!!!:    !@!  !!!  !@!  !!!     ",
-        "     !!:  !!!  !!:  !!!  !!:  !!!  :!!   !!:  !!:       !!:  !!!  !!:  !!!     ",
-        "     :!:  !:!  :!:  !:!  :!:  !:!  :!:   !::  :!:       :!:  !:!  :!:  !:!     ",
-        "     :::::::    :::: ::   ::   ::   ::::::::   :: ::::  ::::: ::   ::   ::     ",
-         "    :: : :      : :  :    :    :    :: : :    : :: ::    : :  :    :    :    ",
-          "                                                                           "};
+           "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+          "!                                                                           !",
+         "!    @@@@@@@   @@   @@   @@@  @@    @@@@@@@   @@@@@@@    @@@@@@   @@@  @@     !",
+        "!     @@@@@@@@  @@@  @@@  @@@@ @@@  @@@@@@@@@  @@@@@@@@  @@@@@@@@  @@@@ @@@     !",
+        "!     @@!  @@@  @@!  @@@  @@!@!@@@  !@@        @@!       @@!  @@@  @@!@!@@@     !",
+        "!     !@!  @!@  !@!  @!@  !@!!@!@!  !@!        !@!       !@!  @!@  !@!!@!@!     !",
+        "!     @!@  !@!  @!@  !@!  @!@ !!@!  !@! @!@!@  @!!!:!    @!@  !@!  @!@ !!@!     !",
+        "!     !@!  !!!  !@!  !!!  !@!  !!!  !!! !!@!!  !!!!!:    !@!  !!!  !@!  !!!     !",
+        "!     !!:  !!!  !!:  !!!  !!:  !!!  :!!   !!:  !!:       !!:  !!!  !!:  !!!     !",
+        "!     :!:  !:!  :!:  !:!  :!:  !:!  :!:   !::  :!:       :!:  !:!  :!:  !:!     !",
+        "!     :::::::    :::: ::   ::   ::   ::::::::   :: ::::  ::::: ::   ::   ::     !",
+         "!    :: : :      : :  :    :    :    :: : :    : :: ::    : :  :    :    :    !",
+          "!                                                                           !",
+           "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"};
         string[] messages = [
     "Welcome, brave soul! What shall we call you on this journey?",
     "Greetings, adventurer! Enter your name to begin your quest.",
@@ -43,49 +71,6 @@
         string playerName = Console.ReadLine().Trim();
         if (playerName == "") return "Drax Ironfist";
         return (playerName.Length <= 15) ? playerName : playerName[..15];
-
-        //return "Liiinder";
-    }
-    internal static void PlayerStatus()
-    {
-        Player player = LevelData.Player;
-        Console.ForegroundColor = ConsoleColor.Gray;
-
-        string status = (
-            $"Name: {player.Name}  -  Health: {player.Health}/{player.MaxHP}  -  " +
-            $"Turn: {player.Turn} - Score: {HighScore.GetScore()}"
-        ).PadRight(Console.BufferWidth);
-
-        Console.SetCursorPosition(1, 1);
-        Console.Write(status);
-    }
-    internal static void PlayerView()
-    {
-        foreach (var element in LevelData.Elements)
-        {
-            if (element is Enemy enemy && enemy.Health <= 0) continue;
-            else if (element is Wall && element.IsVisable) continue;
-            else if (LevelData.Player.HasVisualOn(element)) element.Draw();
-            else if (element.IsVisable) element.Hide();
-        }
-        Console.ResetColor();
-    }
-//TODO: when status bar is moved to print, make this not a get just print wall quote...
-    internal static string GetWallQuote()
-    {
-        string[] quotes = {
-            "You thud against the cold stone.",
-            "The wall stands firm, unyielding.",
-            "Dust swirls as you bump the surface.",
-            "A faint whisper echoes from the wall.",
-            "Your shoulder meets solid rock.",
-            "The wall mocks your attempts to pass.",
-            "A dull thump reverberates in the air.",
-            "You stumble back, the wall unmoved.",
-            "The ancient stone holds its secrets tight.",
-            "Rubbing your forehead, you realize it’s a dead end."
-        };
-        return Utils.GetRandom(quotes);
     }
     internal static void GameOver()
     {
@@ -101,39 +86,41 @@
     "The darkness swallows your strength. Will you return to reclaim your honor?",
     "Your quest ends in ruin, yet the dungeon awaits. Will you try again?"];
         string[] banner = [
-  "                                                                                         ",
- "    @@@@@@@    @@@@@    @@@  @@@     @@@@@@@@      @@@@@@   @@@  @@@  @@@@@@@@  @@@@@@@    ",
-"    @@@@@@@@@  @@@@@@@@  @@@@@@@@@@   @@@@@@@@     @@@@@@@@  @@@  @@@  @@@@@@@@  @@@@@@@@    ",
-"    !@@        @@!  @@@  @@! @@! @@!  @@!          @@!  @@@  @@!  @@@  @@!       @@!  @@@    ",
-"    !@!        !@!  @!@  !@! !@! !@!  !@!          !@!  @!@  !@!  @!@  !@!       !@!  @!@    ",
-"    !@! @!@!@  @!@!@!@!  @!! !!@ @!@  @!!!:!       @!@  !@!  @!@  !@!  @!!!:!    @!@!!@!     ",
-"    !!! !!@!!  !!!@!!!!  !@!   ! !@!  !!!!!:       !@!  !!!  !@!  !!!  !!!!!:    !!@!@!      ",
-"    :!!   !!:  !!:  !!!  !!:     !!:  !!:          !!:  !!!  :!:  !!:  !!:       !!: :!!     ",
-"    :!:   !::  :!:  !:!  :!:     :!:  :!:          :!:  !:!   ::!!:!   :!:       :!:  !:!    ",
-"    :::: ::::  ::   :::  :::     ::    :: ::::     :::::::     ::::    ::: ::::  ::   :::    ",
- "    :: :: :    :   : :   :      :    : :: ::       : : :       :      : ::: :    :   : :   ",
-  "                                                                                         "];
+   "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+  "!                                                                                         !",
+ "!    @@@@@@@    @@@@@    @@@  @@@     @@@@@@@@      @@@@@@   @@@  @@@  @@@@@@@@  @@@@@@@    !",
+"!    @@@@@@@@@  @@@@@@@@  @@@@@@@@@@   @@@@@@@@     @@@@@@@@  @@@  @@@  @@@@@@@@  @@@@@@@@    !",
+"!    !@@        @@!  @@@  @@! @@! @@!  @@!          @@!  @@@  @@!  @@@  @@!       @@!  @@@    !",
+"!    !@!        !@!  @!@  !@! !@! !@!  !@!          !@!  @!@  !@!  @!@  !@!       !@!  @!@    !",
+"!    !@! @!@!@  @!@!@!@!  @!! !!@ @!@  @!!!:!       @!@  !@!  @!@  !@!  @!!!:!    @!@!!@!     !",
+"!    !!! !!@!!  !!!@!!!!  !@!   ! !@!  !!!!!:       !@!  !!!  !@!  !!!  !!!!!:    !!@!@!      !",
+"!    :!!   !!:  !!:  !!!  !!:     !!:  !!:          !!:  !!!  :!:  !!:  !!:       !!: :!!     !",
+"!    :!:   !::  :!:  !:!  :!:     :!:  :!:          :!:  !:!   ::!!:!   :!:       :!:  !:!    !",
+"!    :::: ::::  ::   :::  :::     ::    :: ::::     :::::::     ::::    ::: ::::  ::   :::    !",
+ "!    :: :: :    :   : :   :      :    : :: ::       : : :       :      : ::: :    :   : :   !",
+  "!                                                                                         !",
+   "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"];
 
         Banner(banner);
         BannerMessage(Utils.GetRandom(messages));
-        
-        Console.ReadKey(true);
     }
     internal static void Victory()
     {
         string[] banner = [
-          "                                                                         ",
-         "    @@@@@@@@@  @@@@@@@   @@@  @@@  @@@  @@@@@@@@@@   @@@@@@@   @@@  @@@    ",
-        "      @@@@@@@   @@@@@@@@  @@@  @@@  @@@  @@@@@@@@@@@  @@@@@@@@  @@@  @@@     ",
-        "        @@!     @@!  @@@  @@!  @@!  @@@  @@! @@! @@!  @@!  @@@  @@!  @@@     ",
-        "        !@!     !@!  @!@  !@!  !@!  @!@  !@! !@! !@!  !@!  @!@  !@!  @!@     ",
-        "        @!!     @!@!!@!   !!@  @!@  !@!  @!! !!@ @!@  @!@@!@!   @!@!@!@!     ",
-        "        !!!     !!@!@!    !!!  !@!  !!!  !@!   ! !@!  !!@!!!    !!!@!!!!     ",
-        "        !!:     !!: :!!   !!:  !!:  !!!  !!:     !!:  !!:       !!:  !!!     ",
-        "        :!:     :!:  !:!  :!:  :!:  !:!  :!:     :!:  :!:       :!:  !:!     ",
-        "         ::     ::   :::   ::  ::::: ::  :::     ::    ::       ::   :::     ",
-         "         :       :   : :  :     : :  :    :      :     :       :   : :     ",
-          "                                                                         "];
+           "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+          "!                                                                         !",
+         "!    @@@@@@@@@  @@@@@@@   @@@  @@@  @@@  @@@@@@@@@@   @@@@@@@   @@@  @@@    !",
+        "!      @@@@@@@   @@@@@@@@  @@@  @@@  @@@  @@@@@@@@@@@  @@@@@@@@  @@@  @@@     !",
+        "!        @@!     @@!  @@@  @@!  @@!  @@@  @@! @@! @@!  @@!  @@@  @@!  @@@     !",
+        "!        !@!     !@!  @!@  !@!  !@!  @!@  !@! !@! !@!  !@!  @!@  !@!  @!@     !",
+        "!        @!!     @!@!!@!   !!@  @!@  !@!  @!! !!@ @!@  @!@@!@!   @!@!@!@!     !",
+        "!        !!!     !!@!@!    !!!  !@!  !!!  !@!   ! !@!  !!@!!!    !!!@!!!!     !",
+        "!        !!:     !!: :!!   !!:  !!:  !!!  !!:     !!:  !!:       !!:  !!!     !",
+        "!        :!:     :!:  !:!  :!:  :!:  !:!  :!:     :!:  :!:       :!:  !:!     !",
+        "!         ::     ::   :::   ::  ::::: ::  :::     ::    ::       ::   :::     !",
+         "!         :       :   : :  :     : :  :    :      :     :       :   : :     !",
+          "!                                                                         !",
+           "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"];
         string[] messages =
         {
     "The darkness trembles before your might! Will you push onward to greater glory?",
@@ -149,9 +136,8 @@
 
         Banner(banner);
         BannerMessage(Utils.GetRandom(messages));
-
-        Console.ReadKey(true);
     }
+    
     internal static void Banner(string[] banner)
     {
         ConsoleColor Color = ConsoleColor.Black;
@@ -190,7 +176,7 @@
         Console.BackgroundColor = ConsoleColor.Black;
         Console.ForegroundColor = ConsoleColor.Gray;
 
-        int top = Console.GetCursorPosition().Top  + 1;
+        int top = Console.GetCursorPosition().Top + 1;
 
         for (int i = 0; i < output.Length; i++)
         {
@@ -198,31 +184,8 @@
             Console.Write(output[i]);
         }
     }
-
+    
     // For future updates:
     // Banners are taken from patorjk.com with the font "Poison" then tweaked to personal linking.
     // https://patorjk.com/software/taag/#p=display&h=3&v=3&f=Poison
-
-    // For testing...
-
-    internal static void QueueTest()
-    {
-        Queue<string> messages = new Queue<string>();
-        messages.Enqueue("Sven slog Bengt");
-        messages.Enqueue("Bengan slog tillbaka");
-        messages.Enqueue("Bosse nitade Kaj");
-        messages.Enqueue("Kaj svimmade");
-        while (messages.Count > 0)
-        {
-            string message = messages.Dequeue();
-            Console.WriteLine(message);
-        }
-    }
-    //internal static void StatusBar(string status)
-    //{
-    //    Console.SetCursorPosition(1, bothFields ? 3 : 4);
-    //    Console.Write(status.PadRight(Console.BufferWidth * (bothFields ? 2 : 1)));
-    //    Console.ResetColor();
-    //}
-    //internal static void ClearStatusBar()
 }

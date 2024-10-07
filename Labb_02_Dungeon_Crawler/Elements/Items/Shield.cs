@@ -7,7 +7,7 @@
         Icon = 'o';
     }
 
-    public override string PickUp() 
+    public override void PickUp() 
     {
         string[] messages = {
     "You discover a sturdy shield! Your defense increases.",
@@ -22,11 +22,12 @@
     "A well-crafted shield is now in your possession!"
 };
         string oldDie = LevelData.Player.DefenceDice.ToString();
-        LevelData.Player.DefenceDice = new Dice(2, 6, 2);
+        LevelData.Player.DefenceDice = new Dice(2, 6, 3); // 5 -> 15
 
         Looted = true;
         Remove();
-        return Utils.GetRandom(messages) +
-               $" Defence upgraded from {oldDie} to {LevelData.Player.DefenceDice}";
+        Status.Add(" " + Utils.GetRandom(messages));
+        Status.Add($" Defence upgraded from {oldDie} to {LevelData.Player.DefenceDice}", ConsoleColor.Green);
+        Status.AddLine();
     }
 }

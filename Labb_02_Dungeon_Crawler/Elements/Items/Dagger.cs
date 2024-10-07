@@ -7,7 +7,7 @@
         Icon = '-';
     }
 
-    public override string PickUp()
+    public override void PickUp()
     {
         string[] messages = {
     "You found a sharp dagger! Perfect for close combat.",
@@ -22,11 +22,12 @@
     "A dagger glints in the shadows. Time to strike fast!"
 };
         string oldDie = LevelData.Player.AttackDice.ToString();
-        LevelData.Player.AttackDice = new Dice(2, 8, 3);
+        LevelData.Player.AttackDice = new Dice(3, 6, 2); // 5 -> 20
 
         Looted = true;
         Remove();
-        return Utils.GetRandom(messages) +
-            $" Attack upgraded from {oldDie} to { LevelData.Player.AttackDice}";
+        Status.Add(" " + Utils.GetRandom(messages));
+        Status.Add($" Attack upgraded from {oldDie} to { LevelData.Player.AttackDice}", ConsoleColor.Green);
+        Status.AddLine();
     }
 }

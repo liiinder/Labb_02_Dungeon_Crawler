@@ -7,6 +7,8 @@
     public void Draw(bool drawIcon = true)
     {
         Position.SetCursor();
+        if (this is Wall) Console.BackgroundColor = ConsoleColor.DarkGray;
+        else Console.BackgroundColor = ConsoleColor.Black;
         Console.ForegroundColor = Color;
         Console.Write((drawIcon) ? Icon : ' ');
         IsVisable = drawIcon;

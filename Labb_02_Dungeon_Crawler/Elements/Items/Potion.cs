@@ -7,7 +7,7 @@
         Icon = '+';
     }
 
-    public override string PickUp()
+    public override void PickUp()
     {
         int gain = 25;
         string[] messages = [
@@ -28,6 +28,8 @@
 
         Looted = true;
         Remove();
-        return Utils.GetRandom(messages) + $" +{(healthLost < gain ? healthLost : gain)} hp!";
+        Status.Add(" " + Utils.GetRandom(messages));
+        Status.Add($" You gain +{(healthLost < gain ? healthLost : gain)} hp!", ConsoleColor.Green);
+        Status.AddLine();
     }
 }
