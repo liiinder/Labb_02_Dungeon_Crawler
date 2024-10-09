@@ -26,8 +26,8 @@
 
         Looted = true;
         Remove();
-        Status.Add(" " + Utils.GetRandom(messages));
-        Status.Add($" Attack upgraded from {oldDie} to { LevelData.Player.AttackDice}", ConsoleColor.Green);
-        Status.AddLine();
+        Log.Add(" " + Utils.GetRandom(messages));
+        Log.Add($" Attack upgraded from {oldDie} to { LevelData.Player.AttackDice}", ConsoleColor.Green);
+        Log.AddLine();
     }
 }

@@ -1,6 +1,4 @@
-﻿using static System.Net.Mime.MediaTypeNames;
-
-static class Print
+﻿static class Print
 {
     internal static void PlayerView()
     {
@@ -61,15 +59,27 @@ static class Print
     "Enter the dark depths! But first, what is your name, hero?",
     "Your adventure begins now! What name shall we call you by?"];
 
+        int maxNameLength = 15;
+        string message = Utils.GetRandom(messages) + "  " + new string('_', maxNameLength);
+
         Banner(intro);
-        BannerMessage(Utils.GetRandom(messages), true);
+        BannerMessage(message);
 
-        (int left, int top) = Console.GetCursorPosition();
-        Console.SetCursorPosition(left - 16, top - 1); // Sets the position on the start of the 15 char long line.
+        int left = Console.GetCursorPosition().Left - 1 - maxNameLength;
+        int top = Console.GetCursorPosition().Top - 1;
 
+        Console.SetCursorPosition(left, top);
+        Console.BackgroundColor = ConsoleColor.DarkGray;
+        Console.Write(new String(' ', maxNameLength));
+
+        Console.SetCursorPosition(left, top);
+        Console.CursorVisible = true;
         string playerName = Console.ReadLine().Trim();
+        Console.CursorVisible = false;
+        Console.BackgroundColor = ConsoleColor.Black;
+
         if (playerName == "") return "Drax Ironfist";
-        return (playerName.Length <= 15) ? playerName : playerName[..15];
+        return (playerName.Length <= maxNameLength) ? playerName : playerName[..maxNameLength];
     }
     internal static void GameOver()
     {
@@ -146,7 +156,7 @@ static class Print
             Console.SetCursorPosition(x, y + 3);
             foreach (char c in banner[y])
             {
-                if (c == ' ') Color = ConsoleColor.DarkGray;
+                if      (c == ' ') Color = ConsoleColor.DarkGray;
                 else if (c == '@') Color = ConsoleColor.Magenta;
                 else if (c == '!') Color = ConsoleColor.DarkMagenta;
                 else if (c == ':') Color = ConsoleColor.DarkRed;
@@ -158,19 +168,11 @@ static class Print
         }
         Console.ResetColor();
     }
-    internal static void BannerMessage(string message, bool intro = false)
+    internal static void BannerMessage(string message)
     {
         message = $" {message} ";
         string padding = new string(' ', message.Length);
         string[] output = [padding, message, padding];
-
-        if (intro)
-        {
-            string extra = new string(' ', 16);
-            output[0] += extra;
-            output[1] += extra;
-            output[2] += "¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯ ";
-        }
 
         Console.BackgroundColor = ConsoleColor.Black;
         Console.ForegroundColor = ConsoleColor.Gray;

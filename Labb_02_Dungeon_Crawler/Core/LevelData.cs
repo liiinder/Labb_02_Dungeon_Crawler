@@ -18,7 +18,6 @@
 
         if (!File.Exists(Path + Level + fileEnding)) throw new FileNotFoundException($"File not found: {Path}{Level}{fileEnding}");
 
-        //TODO: StreamReader... - byta till ...
         using (FileStream stream = File.OpenRead(Path + Level + ".txt"))
         {
             byte[] data = new byte[stream.Length];

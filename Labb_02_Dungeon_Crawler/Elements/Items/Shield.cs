@@ -26,8 +26,8 @@
 
         Looted = true;
         Remove();
-        Status.Add(" " + Utils.GetRandom(messages));
-        Status.Add($" Defence upgraded from {oldDie} to {LevelData.Player.DefenceDice}", ConsoleColor.Green);
-        Status.AddLine();
+        Log.Add(" " + Utils.GetRandom(messages));
+        Log.Add($" Defence upgraded from {oldDie} to {LevelData.Player.DefenceDice}", ConsoleColor.Green);
+        Log.AddLine();
     }
 }

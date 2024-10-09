@@ -2,10 +2,9 @@
 {
     public void Start(string path)
     {
-        bool killedAllEnemies = true;
+        bool noEnemiesAlive = true;
         bool runGame = true;
         
-        //new LevelData("Liiinder");
         new LevelData(Print.Intro());
         LevelData.Load(path);
         Console.Clear();
@@ -14,7 +13,7 @@
         {
             Print.PlayerStatus();
             Print.PlayerView();
-            Status.Print();
+            Log.Print();
 
             runGame = LevelData.Player.Update();
 
@@ -22,13 +21,12 @@
 
             LevelData.ExecuteDeathRow();
 
-            killedAllEnemies = LevelData.Elements.All(x => (x is Enemy e) ? e.Health == 0 : true);
-            if (killedAllEnemies) break;
+            noEnemiesAlive = LevelData.Elements.All(x => (x is Enemy e) ? e.Health == 0 : true);
+            if (noEnemiesAlive) break;
         }
-
         Console.Clear();
 
-        if (killedAllEnemies) Print.Victory();
+        if (noEnemiesAlive) Print.Victory();
         else Print.GameOver();
 
         HighScore.FinalScore();

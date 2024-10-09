@@ -6,7 +6,7 @@
         Color = ConsoleColor.Green;
         Icon = 's';
         AttackDice = new Dice(3, 4, 2);     // 5 -> 14 
-        DefenceDice = new Dice(1, 8, 5);    // 6 -> 13
+        DefenceDice = new Dice(1, 8, 3);    // 4 -> 11
         Health = 25;
         Name = "snake";
         Vision = 1.5;

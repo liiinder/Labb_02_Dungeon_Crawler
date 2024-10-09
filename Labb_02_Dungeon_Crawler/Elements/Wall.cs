@@ -20,7 +20,7 @@
             "The ancient stone holds its secrets tight.",
             "Rubbing your forehead, you realize it’s a dead end."
         };
-        Status.Add(" " + Utils.GetRandom(quotes));
-        Status.AddLine();
+        Log.Add(" " + Utils.GetRandom(quotes));
+        Log.AddLine();
     }
 }

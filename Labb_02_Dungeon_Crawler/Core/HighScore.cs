@@ -42,9 +42,12 @@ class HighScore
 
         string message = $"Name: {LevelData.Player.Name}   Score: {finalScore} " +
             $"{((dungeoneer || loothoarder || exterminator) ? "   Achievements:" : "")}" +
-            $"{(dungeoneer ? " Dungeoneer (+100)," : "")}" +
-            $"{(loothoarder ? " Loothoarder (+250)," : "")}" +
-            $"{(exterminator ? " Exterminator (+500)," : "")}";
+            $"{(dungeoneer ? " Dungeoneer (+100) " : "")}" +
+            $"{(loothoarder ? " Loothoarder (+250) " : "")}" +
+            $"{(exterminator ? " Exterminator (+500) " : "")}";
+
+        Console.SetCursorPosition(Utils.PadCenter(message[..^1]), 1);
+        Console.Write(message[..^1]);
 
         string bonus = $"{(dungeoneer ? "Dungeoneer, " : "")}" +
             $"{(loothoarder ? "Loothoarder, " : "")}" +
@@ -53,14 +56,10 @@ class HighScore
 
         current = new HighScore(LevelData.Player.Name, finalScore, bonus, DateTime.Now);
         Save(current);
-
-        Console.SetCursorPosition(Utils.PadCenter(message[..^1]), 1);
-        Console.Write(message[..^1]);
         
         Console.SetCursorPosition(0, top);
         Print(current);
     }
-
     public static void Save(HighScore score)
     {
         scores.Add(score);
@@ -70,7 +69,6 @@ class HighScore
 
         using (StreamWriter writer = new StreamWriter(pathToFile, false)) writer.WriteLine(jsonString);
     }
-
     public static void Load()
     {
         try
@@ -87,7 +85,6 @@ class HighScore
         }
         catch { }
     }
-
     public static void Print(HighScore score, bool all = false)
     {
         int place = 0;
@@ -95,9 +92,10 @@ class HighScore
 
         if (all) scores.Reverse();
         if (!all && count > 5) count = 5;
-        int extraDigits = count.ToString().Length - 1;
 
-        string title = new string(' ', 4 + extraDigits) + "Name               Score   Achievements                          ";
+        int digits = count.ToString().Length;
+
+        string title = new string(' ', 3 + digits) + "Name               Score   Achievements                          ";
         string line = new String('-', title.Length);
         int x = Utils.PadLeftCenter(title);
         int left = x - title.Length;
@@ -114,7 +112,7 @@ class HighScore
             Console.Write("\n" + "".PadLeft(left));
             if (curr.Equals(score)) Console.BackgroundColor = ConsoleColor.DarkGray;
 
-            Console.Write(($" {place}.".PadLeft(3 + extraDigits) + $" {curr.Name.PadRight(18)}" +
+            Console.Write(($" {place}.".PadLeft(2 + digits) + $" {curr.Name.PadRight(18)}" +
                 $"{curr.Score.ToString().PadLeft(6)}{curr.Achievement} ").PadRight(line.Length));
 
             if (curr.Equals(score)) Console.BackgroundColor = ConsoleColor.Black;
@@ -142,7 +140,7 @@ class HighScore
         }
         else
         {
-            string space = "Press Space for HighScores!";
+            string space = "Top 5 scores - Press SPACE to see all!";
             Console.Write(space.PadLeft(Utils.PadLeftCenter(space)) + "\n");
             ConsoleKeyInfo input = Console.ReadKey(true);
             if (input.Key == ConsoleKey.Spacebar) Print(score, true);

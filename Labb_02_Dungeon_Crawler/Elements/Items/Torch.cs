@@ -25,8 +25,8 @@
 
         Looted = true;
         Remove();
-        Status.Add(" " + Utils.GetRandom(messages));
-        Status.Add($" You gain +{gain} to your vision.", ConsoleColor.Green);
-        Status.AddLine();
+        Log.Add(" " + Utils.GetRandom(messages));
+        Log.Add($" You gain +{gain} to your vision.", ConsoleColor.Green);
+        Log.AddLine();
     }
 }

@@ -28,8 +28,8 @@
 
         Looted = true;
         Remove();
-        Status.Add(" " + Utils.GetRandom(messages));
-        Status.Add($" You gain +{(healthLost < gain ? healthLost : gain)} hp!", ConsoleColor.Green);
-        Status.AddLine();
+        Log.Add(" " + Utils.GetRandom(messages));
+        Log.Add($" You gain +{(healthLost < gain ? healthLost : gain)} hp!", ConsoleColor.Green);
+        Log.AddLine();
     }
 }

@@ -20,26 +20,26 @@
         int attackThrow = AttackDice.Throw();
         int defenceThrow = defender.DefenceDice.Throw();
         int damageTaken = Math.Max(0, attackThrow - defenceThrow);
-        ConsoleColor color = ConsoleColor.Yellow;
-        
         defender.Health -= damageTaken;
 
         if (this is Player player) player.DamageDone += damageTaken;
-        if (defender.Health <= 0 && defender is not Player) defender.Remove();
+        if (defender is Enemy && defender.Health <= 0) defender.Remove();
 
         string attacking = (this is Player) ? "You" : $"A {Name}";
         string defending = (defender is Player) ? "you" : $"a {defender.Name}";
-        string defendersHP = (defender.Health > 0) ? $"{defender.Health} hp left." : $"{defending} died.";
+        string defending2 = (defender is Player) ? "you" : "it";
+        string defenderStatus = (defender.Health > 0) ? $"for {damageTaken} dmg ({defender.Health} hp)" : $"{defending2} died!";
 
-        string message = $" {attacking} attacked ({AttackDice} » {attackThrow})" +
-                       $" {defending} ({defender.DefenceDice} » {defenceThrow}) for {damageTaken} damage";
+        string message = $" {attacking} ({AttackDice} » {attackThrow}) ATK" +
+                       $" {defending} ({defender.DefenceDice} » {defenceThrow}) {defenderStatus}";
 
+        ConsoleColor color = ConsoleColor.Yellow;
         if (this is not Player) color = (damageTaken > 0) ? ConsoleColor.Red : ConsoleColor.Green;
 
-        Status.Add(message, color);
+        Log.Add(message, color);
 
         if (mainAttack && defender.Health > 0) defender.Attack(this, mainAttack: false);
-        else Status.AddLine();
+        else Log.AddLine();
     }
     public void MoveTo(Position newPosition)
     {
