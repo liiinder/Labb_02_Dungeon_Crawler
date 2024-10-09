@@ -27,19 +27,16 @@
         if (this is Player player) player.DamageDone += damageTaken;
         if (defender.Health <= 0 && defender is not Player) defender.Remove();
 
-        string attacking = (this is Player) ? "You" : $"The {Name}";
-        string defending = (defender is Player) ? "you" : $"the {defender.Name}";
+        string attacking = (this is Player) ? "You" : $"A {Name}";
+        string defending = (defender is Player) ? "you" : $"a {defender.Name}";
         string defendersHP = (defender.Health > 0) ? $"{defender.Health} hp left." : $"{defending} died.";
 
-        string message = $" {attacking} attacked ({AttackDice} => {attackThrow})" +
-                       $" {defending} ({defender.DefenceDice} => {defenceThrow})";
-                       
-        string damage = $" {attacking} hit {defending} for {damageTaken} damage, {defendersHP}";
+        string message = $" {attacking} attacked ({AttackDice} » {attackThrow})" +
+                       $" {defending} ({defender.DefenceDice} » {defenceThrow}) for {damageTaken} damage";
 
         if (this is not Player) color = (damageTaken > 0) ? ConsoleColor.Red : ConsoleColor.Green;
 
         Status.Add(message, color);
-        Status.Add(damage, color);
 
         if (mainAttack && defender.Health > 0) defender.Attack(this, mainAttack: false);
         else Status.AddLine();

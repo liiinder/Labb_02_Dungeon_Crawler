@@ -2,10 +2,10 @@
 Console.BackgroundColor = ConsoleColor.Black;
 Console.ForegroundColor = ConsoleColor.Gray;
 
-//string path = "Levels\\Level1.txt";
-string path = "Levels\\Debug.txt";
+//string level = "Level1";
+string level = "Debug";
 
-new GameLoop().Start(path);
+new GameLoop().Start(level);
 
 Console.CursorVisible = true;
 Console.SetCursorPosition(0, Console.BufferHeight - 1);

@@ -1,27 +1,30 @@
 ﻿class LevelData
 {
+    public static Queue<LevelElement> deathRow = new Queue<LevelElement>();
     private static List<LevelElement> _elements = new List<LevelElement>();
+
     public static List<LevelElement> Elements { get => _elements; }
     public static Player Player { get; set; }
-
     public static string Path { get; set; }
-
-    public static Queue<LevelElement> deathRow = new Queue<LevelElement>();
+    public static string Level { get; set; }
 
     public LevelData(string playerName) => Player = new Player(playerName);
 
-    public static void Load(string pathToFile)
+    public static void Load(string file)
     {
-        Path = pathToFile;
+        Path = Directory.GetCurrentDirectory().Split("bin")[0] + "Levels\\";
+        Level = file;
+        string fileEnding = ".txt";
 
-        if (!File.Exists(Path)) throw new FileNotFoundException($"File not found: {Path}");
+        if (!File.Exists(Path + Level + fileEnding)) throw new FileNotFoundException($"File not found: {Path}{Level}{fileEnding}");
 
-        using (FileStream stream = File.OpenRead(Path))
+        //TODO: StreamReader... - byta till ...
+        using (FileStream stream = File.OpenRead(Path + Level + ".txt"))
         {
             byte[] data = new byte[stream.Length];
             stream.Read(data);
 
-            int x = 3, y = 3;
+            int x = 3, y = 4;
             foreach (char c in data)
             {
                 if (c == '\n')

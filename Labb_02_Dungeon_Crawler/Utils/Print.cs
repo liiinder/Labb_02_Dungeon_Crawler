@@ -13,20 +13,19 @@ static class Print
         }
         Console.ResetColor();
     }
-    internal static void PlayerStatus(int score)
+    internal static void PlayerStatus()
     {
         Player player = LevelData.Player;
+
+        string status1 = $"Name: {player.Name}".PadRight(41) + "Score:" + $"{HighScore.GetScore()}".PadLeft(7);
+        string status2 = $"Health: {player.Health}/{player.MaxHP}".PadRight(42) + "Turn:" + $"{player.Turn}".PadLeft(7);
+
         Console.ForegroundColor = ConsoleColor.Gray;
-
-        string status = (
-            $"Name: {player.Name}  -  Health: {player.Health}/{player.MaxHP}  -  " +
-            $"Turn: {player.Turn}  -  Score: {score}"
-        ).PadRight(Console.BufferWidth);
-
         Console.SetCursorPosition(1, 1);
-        Console.Write(status);
+        Console.Write(status1);
+        Console.SetCursorPosition(1, 2);
+        Console.Write(status2);
     }
-    internal static void PlayerStatus() => PlayerStatus(HighScore.GetScore());
     
     /// <summary>
     /// Print intro banner and ask user for a playername.
@@ -180,7 +179,7 @@ static class Print
 
         for (int i = 0; i < output.Length; i++)
         {
-            Console.SetCursorPosition(Utils.PaddToCenter(output[i]), top + i);
+            Console.SetCursorPosition(Utils.PadCenter(output[i]), top + i);
             Console.Write(output[i]);
         }
     }

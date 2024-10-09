@@ -5,6 +5,7 @@
         bool killedAllEnemies = true;
         bool runGame = true;
         
+        //new LevelData("Liiinder");
         new LevelData(Print.Intro());
         LevelData.Load(path);
         Console.Clear();
@@ -13,6 +14,7 @@
         {
             Print.PlayerStatus();
             Print.PlayerView();
+            Status.Print();
 
             runGame = LevelData.Player.Update();
 
@@ -22,16 +24,13 @@
 
             killedAllEnemies = LevelData.Elements.All(x => (x is Enemy e) ? e.Health == 0 : true);
             if (killedAllEnemies) break;
-
-            Status.Print();
         }
 
-        //Print.PlayerStatus();
         Console.Clear();
+
         if (killedAllEnemies) Print.Victory();
         else Print.GameOver();
-        HighScore.FinalScore();
 
-        Console.ReadKey(true);
+        HighScore.FinalScore();
     }
 }
