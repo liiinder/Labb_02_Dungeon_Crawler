@@ -10,9 +10,7 @@
         double a = Math.Abs(pos.X - X);
         double b = Math.Abs(pos.Y - Y);
 
-        if (a > 0 && b > 0) return Math.Sqrt((a * a) + (b * b));
-        else if (a > 0) return a;
-        return b;
+        return Math.Sqrt((a * a) + (b * b));
     }
     public double DistanceTo(LevelElement element) => DistanceTo(element.Position);
 }
