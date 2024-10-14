@@ -7,8 +7,8 @@
     public void SetCursor() => Console.SetCursorPosition(X, Y);
     public double DistanceTo(Position pos)
     {
-        double a = Math.Abs(pos.X - X);
-        double b = Math.Abs(pos.Y - Y);
+        double a = pos.X - X;
+        double b = pos.Y - Y;
 
         return Math.Sqrt((a * a) + (b * b));
     }
