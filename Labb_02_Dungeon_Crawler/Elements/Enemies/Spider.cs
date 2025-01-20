@@ -11,17 +11,17 @@
         Name = "spider";
         Vision = 1.5;
     }
-    public override void Update()
+    public override void Update(LevelData level)
     {
-        if (Position.DistanceTo(LevelData.Player) < 7)
+        if (Position.DistanceTo(level.Player) < 7)
         {
-            if (HasVisualOn(LevelData.Player)) Attack(LevelData.Player);
+            if (HasVisualOn(level.Player)) Attack(level.Player, level);
             else
             {
-                var elementsNear = LevelData.Elements.Where(x => HasVisualOn(x)).ToList();
+                var elementsNear = level.Elements.Where(x => HasVisualOn(x)).ToList();
 
-                int newX = Math.Sign(LevelData.Player.Position.X - Position.X);
-                int newY = Math.Sign(LevelData.Player.Position.Y - Position.Y);
+                int newX = Math.Sign(level.Player.Position.X - Position.X);
+                int newY = Math.Sign(level.Player.Position.Y - Position.Y);
 
                 List<Position> newPositions = new List<Position>();
 

@@ -1,4 +1,4 @@
-﻿class Wall : LevelElement
+﻿public class Wall : LevelElement
 {
     public Wall(Position position)
     {
@@ -6,7 +6,7 @@
         Color = ConsoleColor.Black;
         Icon = '#';
     }
-    internal static void Quote()
+    public static void Quote()
     {
         string[] quotes = {
             "You thud against the cold stone.",

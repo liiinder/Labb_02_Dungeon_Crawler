@@ -1,4 +1,4 @@
 ﻿abstract class Enemy : MovingElement
 {
-    public abstract void Update();
+    public abstract void Update(LevelData levelData);
 }

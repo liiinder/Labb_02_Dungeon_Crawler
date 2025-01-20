@@ -1,34 +1,43 @@
-﻿class GameLoop
+﻿using Labb_02_Dungeon_Crawler.Utils;
+
+class GameLoop
 {
-    public void Start(string path)
+    public void Start(LevelData level)
     {
         bool noEnemiesAlive = true;
-        bool runGame = true;
-        
-        new LevelData(Print.Intro());
-        LevelData.Load(path);
-        Console.Clear();
+        int option = 0;
 
-        while (runGame)
+        while (true)
         {
-            Print.PlayerStatus();
-            Print.PlayerView();
+            Print.PlayerStatus(level);
+            Print.PlayerView(level);
             Log.Print();
 
-            runGame = LevelData.Player.Update();
+            option = level.Player.Update(level);
 
-            foreach (Enemy enemy in LevelData.Elements.Where(x => x is Enemy e && e.Health > 0)) enemy.Update();
+            if (option == 0) continue; //  0: Continue
+            else if (option == 3) { }
+            else break;                // -1: GameOver , 1: Save , 2: Quit
 
-            LevelData.ExecuteDeathRow();
+            foreach (Enemy enemy in level.Elements.Where(x => x is Enemy e && e.Health > 0)) enemy.Update(level);
 
-            noEnemiesAlive = LevelData.Elements.All(x => (x is Enemy e) ? e.Health == 0 : true);
+            level.ExecuteDeathRow();
+
+            noEnemiesAlive = level.Elements.All(x => (x is Enemy e) ? e.Health == 0 : true);
             if (noEnemiesAlive) break;
         }
         Console.Clear();
+        Console.ResetColor();
 
-        if (noEnemiesAlive) Print.Victory();
-        else Print.GameOver();
+        if (option == 3) Print.Victory();
+        else if (option == -1) Print.GameOver();
+        else if (option == 1)
+        {
+            Console.WriteLine("Gamesaved"); //Print.Thanks();
+            new MongoDb().SaveGame(level);
+        }
 
-        HighScore.FinalScore();
+        if (option == 3 || option == -1) HighScore.FinalScore(level);
+
     }
 }

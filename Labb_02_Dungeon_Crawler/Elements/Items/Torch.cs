@@ -7,10 +7,8 @@
         Icon = '¥';
     }
 
-    public override void PickUp()
+    public override void PickUp(LevelData level)
     {
-        int gain = 2;
-        LevelData.Player.Vision += gain;
         string[] messages = {
     "You found a torch! The darkness recedes slightly.",
     "A torch flickers to life. Your path is now visible.",
@@ -23,8 +21,11 @@
     "You pick up a torch. The flame burns brightly.",
     "A torch illuminates the darkness. Your vision clears."};
 
+        int gain = 2;
+        level.Player.Vision += gain;
+
         Looted = true;
-        Remove();
+        level.Remove(this);
         Log.Add(" " + Utils.GetRandom(messages));
         Log.Add($" You gain +{gain} to your vision.", ConsoleColor.Green);
         Log.AddLine();

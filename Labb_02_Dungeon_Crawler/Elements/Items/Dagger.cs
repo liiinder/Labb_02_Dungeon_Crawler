@@ -1,4 +1,4 @@
-﻿class Dagger : Item
+﻿public class Dagger : Item
 {
     public Dagger(Position position)
     {
@@ -7,7 +7,7 @@
         Icon = '-';
     }
 
-    public override void PickUp()
+    public override void PickUp(LevelData level)
     {
         string[] messages = {
     "You found a sharp dagger! Perfect for close combat.",
@@ -21,13 +21,13 @@
     "You found a dagger! Speed and precision at your side.",
     "A dagger glints in the shadows. Time to strike fast!"
 };
-        string oldDie = LevelData.Player.AttackDice.ToString();
-        LevelData.Player.AttackDice = new Dice(3, 6, 2); // 5 -> 20
+        var newDie = new Dice(3, 6, 2);
 
         Looted = true;
-        Remove();
+        level.Remove(this);
         Log.Add(" " + Utils.GetRandom(messages));
-        Log.Add($" Attack upgraded from {oldDie} to { LevelData.Player.AttackDice}", ConsoleColor.Green);
+        Log.Add($" Attack upgraded from {level.Player.AttackDice} to {newDie}", ConsoleColor.Green);
         Log.AddLine();
+        level.Player.AttackDice = newDie; // 5 -> 20
     }
 }

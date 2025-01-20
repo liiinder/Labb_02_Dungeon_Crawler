@@ -1,4 +1,4 @@
-﻿class Shield : Item
+﻿public class Shield : Item
 {
     public Shield(Position position)
     {
@@ -7,7 +7,7 @@
         Icon = 'o';
     }
 
-    public override void PickUp() 
+    public override void PickUp(LevelData level)
     {
         string[] messages = {
     "You discover a sturdy shield! Your defense increases.",
@@ -21,13 +21,13 @@
     "You equip a shield. Enemies will have a harder time!",
     "A well-crafted shield is now in your possession!"
 };
-        string oldDie = LevelData.Player.DefenceDice.ToString();
-        LevelData.Player.DefenceDice = new Dice(2, 6, 3); // 5 -> 15
+        var newDie = new Dice(2, 6, 3); // 5 -> 15
 
         Looted = true;
-        Remove();
+        level.Remove(this);
         Log.Add(" " + Utils.GetRandom(messages));
-        Log.Add($" Defence upgraded from {oldDie} to {LevelData.Player.DefenceDice}", ConsoleColor.Green);
+        Log.Add($" Defence upgraded from {level.Player.DefenceDice} to {newDie}", ConsoleColor.Green);
         Log.AddLine();
+        level.Player.DefenceDice = newDie;
     }
 }

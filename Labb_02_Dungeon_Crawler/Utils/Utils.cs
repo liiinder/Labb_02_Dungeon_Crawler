@@ -5,15 +5,15 @@
     /// </summary>
     /// <param name="strings">["Hello", "World", "What", "Can", "We", "Do", "For", "You?"]</param>
     /// <returns>A random string from the array</returns>
-    internal static string GetRandom(String[] strings) => strings[new Random().Next(0, strings.Length)];
+    public static string GetRandom(String[] strings) => strings[new Random().Next(0, strings.Length)];
 
     /// <summary>
     /// Take a string as parameter and returns where the pointer should be placed to make the string printed center
     /// </summary>
     /// <param name="s">A string that you probably wants to center</param>
     /// <returns>an int that could be used with <c>Console.SetCursorPosition().Left to center string</c></returns>
-    internal static int PadCenter(string s) => (Console.BufferWidth - s.Length) / 2;
+    public static int PadCenter(string s) => (Console.BufferWidth - s.Length) / 2;
 
     //Returns the int needed for padLeft to be centered.
-    internal static int PadLeftCenter(string s) => PadCenter(s) + s.Length;
+    public static int PadLeftCenter(string s) => PadCenter(s) + s.Length;
 }

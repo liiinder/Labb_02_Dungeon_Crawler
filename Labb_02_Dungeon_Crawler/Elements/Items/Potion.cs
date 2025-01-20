@@ -1,4 +1,4 @@
-﻿class Potion : Item
+﻿public class Potion : Item
 {
     public Potion(Position position)
     {
@@ -7,7 +7,7 @@
         Icon = '+';
     }
 
-    public override void PickUp()
+    public override void PickUp(LevelData level)
     {
         int gain = 25;
         string[] messages = [
@@ -21,13 +21,14 @@
     "Potion acquired! Your health is replenished.",
     "You found a health potion. Time to heal up!"
 ];
-        int healthLost = LevelData.Player.MaxHP - LevelData.Player.Health;
+        Player player = level.Player;
+        int healthLost = player.MaxHP - player.Health;
 
-        if (healthLost >= gain) LevelData.Player.Health += gain;
-        else LevelData.Player.Health = LevelData.Player.MaxHP;
+        if (healthLost >= gain) player.Health += gain;
+        else player.Health = player.MaxHP;
 
         Looted = true;
-        Remove();
+        level.Remove(this);
         Log.Add(" " + Utils.GetRandom(messages));
         Log.Add($" You gain +{(healthLost < gain ? healthLost : gain)} hp!", ConsoleColor.Green);
         Log.AddLine();

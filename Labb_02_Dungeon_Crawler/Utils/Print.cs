@@ -1,38 +1,6 @@
 ﻿static class Print
 {
-    internal static void PlayerView()
-    {
-        foreach (var element in LevelData.Elements)
-        {
-            if (element is Enemy enemy && enemy.Health <= 0) continue;
-            else if (element is Wall && element.IsVisable) continue;
-            else if (LevelData.Player.HasVisualOn(element)) element.Draw();
-            else if (element.IsVisable) element.Hide();
-        }
-        Console.ResetColor();
-    }
-    internal static void PlayerStatus()
-    {
-        Player player = LevelData.Player;
-
-        string status1 = $"Name: {player.Name}".PadRight(41) + "Score:" + $"{HighScore.GetScore()}".PadLeft(7);
-        string status2 = $"Health: {player.Health}/{player.MaxHP}".PadRight(42) + "Turn:" + $"{player.Turn}".PadLeft(7);
-
-        Console.ForegroundColor = ConsoleColor.Gray;
-        Console.SetCursorPosition(1, 1);
-        Console.Write(status1);
-        Console.SetCursorPosition(1, 2);
-        Console.Write(status2);
-    }
-    
-    /// <summary>
-    /// Print intro banner and ask user for a playername.
-    /// Then waits for a <c>Console.ReadLine()</c>
-    /// </summary>
-    /// <returns>Hopefully returns a PG-13 rated playername.</returns>
-    internal static string Intro()
-    {
-        string[] intro = {
+    static string[] intro = {
            "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
           "!                                                                           !",
          "!    @@@@@@@   @@   @@   @@@  @@    @@@@@@@   @@@@@@@    @@@@@@   @@@  @@     !",
@@ -47,6 +15,40 @@
          "!    :: : :      : :  :    :    :    :: : :    : :: ::    : :  :    :    :    !",
           "!                                                                           !",
            "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"};
+
+    public static void PlayerView(LevelData level)
+    {
+        foreach (var element in level.Elements)
+        {
+            if (element is Enemy enemy && enemy.Health <= 0) continue;
+            else if (element is Wall && element.IsVisable) continue;
+            else if (level.Player.HasVisualOn(element)) element.Draw();
+            else if (element.IsVisable) element.Hide();
+        }
+        Console.ResetColor();
+    }
+    public static void PlayerStatus(LevelData level)
+    {
+        Player player = level.Player;
+
+        string status1 = $"Name: {player.Name}".PadRight(41) + "Score:" + $"{HighScore.GetScore(level.Player)}".PadLeft(7);
+        string status2 = $"Health: {player.Health}/{player.MaxHP}".PadRight(42) + "Turn:" + $"{player.Turn}".PadLeft(7);
+
+        Console.ForegroundColor = ConsoleColor.Gray;
+        Console.SetCursorPosition(1, 1);
+        Console.Write(status1);
+        Console.SetCursorPosition(1, 2);
+        Console.Write(status2);
+        Console.ResetColor();
+    }
+
+    /// <summary>
+    /// Print intro banner and ask user for a playername.
+    /// Then waits for a <c>Console.ReadLine()</c>
+    /// </summary>
+    /// <returns>Hopefully returns a PG-13 rated playername.</returns>
+    public static string NewGame()
+    {
         string[] messages = [
     "Welcome, brave soul! What shall we call you on this journey?",
     "Greetings, adventurer! Enter your name to begin your quest.",
@@ -81,7 +83,10 @@
         if (playerName == "") return "Drax Ironfist";
         return (playerName.Length <= maxNameLength) ? playerName : playerName[..maxNameLength];
     }
-    internal static void GameOver()
+
+    public static void Intro() => Banner(intro);
+
+    public static void GameOver()
     {
         string[] messages = [
     "The shadows have claimed you, weary traveler. Will you summon the strength to return?",
@@ -113,7 +118,7 @@
         Banner(banner);
         BannerMessage(Utils.GetRandom(messages));
     }
-    internal static void Victory()
+    public static void Victory()
     {
         string[] banner = [
            "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
@@ -146,17 +151,17 @@
         Banner(banner);
         BannerMessage(Utils.GetRandom(messages));
     }
-    
-    internal static void Banner(string[] banner)
+
+    public static void Banner(string[] banner)
     {
         ConsoleColor Color = ConsoleColor.Black;
         for (int y = 0; y < banner.Length; y++)
         {
-            int x = (Console.BufferWidth - banner[y].Length) / 2;
+            int x = (Utils.PadCenter(banner[y]));
             Console.SetCursorPosition(x, y + 3);
             foreach (char c in banner[y])
             {
-                if      (c == ' ') Color = ConsoleColor.DarkGray;
+                if (c == ' ') Color = ConsoleColor.DarkGray;
                 else if (c == '@') Color = ConsoleColor.Magenta;
                 else if (c == '!') Color = ConsoleColor.DarkMagenta;
                 else if (c == ':') Color = ConsoleColor.DarkRed;
@@ -168,7 +173,7 @@
         }
         Console.ResetColor();
     }
-    internal static void BannerMessage(string message)
+    public static void BannerMessage(string message)
     {
         message = $" {message} ";
         string padding = new string(' ', message.Length);
@@ -185,7 +190,7 @@
             Console.Write(output[i]);
         }
     }
-    
+
     // For future updates:
     // Banners are taken from patorjk.com with the font "Poison" then tweaked to personal linking.
     // https://patorjk.com/software/taag/#p=display&h=3&v=3&f=Poison

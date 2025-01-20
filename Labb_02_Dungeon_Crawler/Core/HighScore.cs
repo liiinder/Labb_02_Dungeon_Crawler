@@ -2,7 +2,6 @@
 
 class HighScore
 {
-    private static string pathToFile = LevelData.Path + "Highscores\\" + LevelData.Level + ".dat";
     public static List<HighScore> scores = new List<HighScore>();
 
     public int Score { get; set; }
@@ -18,29 +17,29 @@ class HighScore
         Time = time;
     }
 
-    public static int GetScore()
+    public static int GetScore(Player player)
     {
-        Player player = LevelData.Player;
         int score = (player.DamageDone * 5) - (player.Turn / 2) + player.Health - player.MaxHP;
         return Math.Max(0, score);
     }
-    public static void FinalScore()
+    public static void FinalScore(LevelData level)
     {
-        Load();
+        string pathToFile = level.Path + "Highscores\\" + level.Level + ".dat";
+        Load(pathToFile);
         int top = Console.GetCursorPosition().Top;
         HighScore current;
 
-        bool dungeoneer = LevelData.Elements.All(x => (x is Wall w) ? w.IsVisable : true);
-        bool exterminator = LevelData.Elements.All(x => (x is Enemy e) ? e.Health == 0 : true);
-        bool loothoarder = LevelData.Elements.All(x => (x is Item i) ? i.Looted : true);
- 
-        int finalScore = GetScore();
+        bool dungeoneer = level.Elements.All(x => (x is Wall w) ? w.IsVisable : true);
+        bool exterminator = level.Elements.All(x => (x is Enemy e) ? e.Health == 0 : true);
+        bool loothoarder = level.Elements.All(x => (x is Item i) ? i.Looted : true);
+
+        int finalScore = GetScore(level.Player);
 
         if (dungeoneer) finalScore += 100;
         if (exterminator) finalScore += 500;
         if (loothoarder) finalScore += 250;
 
-        string message = $"Name: {LevelData.Player.Name}   Score: {finalScore} " +
+        string message = $"Name: {level.Player.Name}   Score: {finalScore} " +
             $"{((dungeoneer || loothoarder || exterminator) ? "   Achievements:" : "")}" +
             $"{(dungeoneer ? " Dungeoneer (+100) " : "")}" +
             $"{(loothoarder ? " Loothoarder (+250) " : "")}" +
@@ -54,26 +53,26 @@ class HighScore
             $"{(exterminator ? "Exterminator, " : "")}";
         if (bonus.Length > 0) bonus = "   " + bonus[..^2];
 
-        current = new HighScore(LevelData.Player.Name, finalScore, bonus, DateTime.Now);
-        Save(current);
-        
+        current = new HighScore(level.Player.Name, finalScore, bonus, DateTime.Now);
+        Save(current, pathToFile);
+
         Console.SetCursorPosition(0, top);
         Print(current);
     }
-    public static void Save(HighScore score)
+    public static void Save(HighScore score, string path)
     {
         scores.Add(score);
         scores = scores.OrderByDescending(x => x.Score).ThenBy(x => x.Time).ToList();
 
         string jsonString = JsonSerializer.Serialize(new HighScores(scores));
 
-        using (StreamWriter writer = new StreamWriter(pathToFile, false)) writer.WriteLine(jsonString);
+        using (StreamWriter writer = new StreamWriter(path, false)) writer.WriteLine(jsonString);
     }
-    public static void Load()
+    public static void Load(string path)
     {
         try
         {
-            using (StreamReader reader = new StreamReader(pathToFile))
+            using (StreamReader reader = new StreamReader(path))
             {
                 while (!reader.EndOfStream)
                 {
@@ -99,7 +98,7 @@ class HighScore
         string line = new String('-', title.Length);
         int x = Utils.PadLeftCenter(title);
         int left = x - title.Length;
-            
+
         Console.Write("\n" + title.PadLeft(x));
         Console.Write("\n" + line.PadLeft(Utils.PadLeftCenter(line)));
 

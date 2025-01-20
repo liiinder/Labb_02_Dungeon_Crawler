@@ -1,16 +1,21 @@
-﻿class LevelData
-{
-    public static Queue<LevelElement> deathRow = new Queue<LevelElement>();
-    private static List<LevelElement> _elements = new List<LevelElement>();
+﻿using MongoDB.Bson.Serialization.Attributes;
 
-    public static List<LevelElement> Elements { get => _elements; }
-    public static Player Player { get; set; }
-    public static string Path { get; set; }
-    public static string Level { get; set; }
+[BsonIgnoreExtraElements]
+public class LevelData
+{
+    private Queue<LevelElement> deathRow = new();
+
+    public List<LevelElement> Elements { get; set; } = new();
+    [BsonIgnore]
+    public Player Player { get; set; }
+    public string Path { get; set; }
+    public string Level { get; set; }
+
+    public LevelData() { }
 
     public LevelData(string playerName) => Player = new Player(playerName);
 
-    public static void Load(string file)
+    public void LoadFile(string file)
     {
         Path = Directory.GetCurrentDirectory().Split("bin")[0] + "Levels\\";
         Level = file;
@@ -35,30 +40,54 @@
                 else if (c == '&')
                 {
                     Player.Position = new Position(x, y);
-                    _elements.Add(Player);
+                    Elements.Add(Player);
                 }
-                else if (c == '#') _elements.Add(new Wall(new Position(x, y)));
+                else if (c == '#') Elements.Add(new Wall(new Position(x, y)));
                 // Enemies
-                else if (c == 'r') _elements.Add(new Rat(new Position(x, y)));
-                else if (c == 's') _elements.Add(new Snake(new Position(x, y)));
-                else if (c == '*') _elements.Add(new Spider(new Position(x, y)));
+                else if (c == 'r') Elements.Add(new Rat(new Position(x, y)));
+                else if (c == 's') Elements.Add(new Snake(new Position(x, y)));
+                else if (c == '*') Elements.Add(new Spider(new Position(x, y)));
                 // Items
-                else if (c == '¥') _elements.Add(new Torch(new Position(x, y)));
-                else if (c == '-') _elements.Add(new Dagger(new Position(x, y)));
-                else if (c == 'o') _elements.Add(new Shield(new Position(x, y)));
-                else if (c == '+') _elements.Add(new Potion(new Position(x, y)));
+                else if (c == '¥') Elements.Add(new Torch(new Position(x, y)));
+                else if (c == '-') Elements.Add(new Dagger(new Position(x, y)));
+                else if (c == 'o') Elements.Add(new Shield(new Position(x, y)));
+                else if (c == '+') Elements.Add(new Potion(new Position(x, y)));
 
                 x++;
             }
         }
-    }  
+    }
 
-    public static void ExecuteDeathRow()
+    public void LoadGame(LevelData loaded)
+    {
+        Elements = loaded.Elements;
+        foreach (LevelElement e in Elements)
+        {
+            if (e is Player p)
+            {
+                Player = p;
+                break;
+            }
+        }
+        Path = loaded.Path; // förmodligen inte används till detta...
+        Level = loaded.Level;
+
+        foreach (LevelElement e in Elements)
+        {
+            if (e.IsVisable) e.Draw();
+        }
+    }
+    public void ExecuteDeathRow()
     {
         while (deathRow.Any())
         {
             LevelElement nextInLine = deathRow.Dequeue();
             Elements.Remove(nextInLine);
         }
+    }
+    public void Remove(LevelElement element)
+    {
+        element.Draw(false);
+        deathRow.Enqueue(element);
     }
 }

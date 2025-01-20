@@ -1,32 +1,36 @@
-﻿static class Log
+﻿public static class Log
 {
-    private static Queue<LogMessage> Messages = new Queue<LogMessage>();
-    private static int x = 57;
-    private static int y = 1;
-    private static int rows;
-    private static int timer;
+    public static Queue<LogMessage> MessageQueue = new Queue<LogMessage>();
+    public static int x = 57;
+    public static int y = 1;
+    public static int rows;
+    public static int timer;
+    public static List<LogMessage> MessageLog = new();
+
 
     public static void Add(LogMessage message)
     {
-        if (Messages.Count == 0) AddLine();
-        if (Messages.Count < 27) Messages.Enqueue(message);
+        if (MessageQueue.Count == 0) AddLine();
+        if (MessageQueue.Count < 27) MessageQueue.Enqueue(message);
     }
     public static void Add(string message) => Add(new LogMessage(message));
     public static void Add(string message, ConsoleColor color) => Add(new LogMessage(message, color));
     public static void AddLine()
     {
-        Messages.Enqueue(new LogMessage(new String('-', Console.BufferWidth - x), ConsoleColor.DarkGray));
+        MessageQueue.Enqueue(new LogMessage(new String('-', Console.BufferWidth - x), ConsoleColor.DarkGray));
     }
-    
+
     public static void Print()
     {
-        if (Messages.Any())
+        if (MessageQueue.Any())
         {
             Clear();
-            while (Messages.Any())
+            while (MessageQueue.Any())
             {
+
                 Console.SetCursorPosition(x, y + rows);
-                LogMessage message = Messages.Dequeue();
+                LogMessage message = MessageQueue.Dequeue();
+                MessageLog.Add(message);
                 Console.ForegroundColor = message.Color;
                 Console.WriteLine(message);
                 rows++;
@@ -49,7 +53,7 @@
         rows = 0;
     }
 }
-class LogMessage
+public class LogMessage
 {
     public ConsoleColor Color { get; init; }
     public string Message { get; init; }
