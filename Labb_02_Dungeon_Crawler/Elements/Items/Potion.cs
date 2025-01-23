@@ -29,8 +29,7 @@
 
         Looted = true;
         level.Remove(this);
-        Log.Add(" " + Utils.GetRandom(messages));
-        Log.Add($" You gain +{(healthLost < gain ? healthLost : gain)} hp!", ConsoleColor.Green);
-        Log.AddLine();
+        level.Log.Add(new LogMessage(Utils.GetRandom(messages), level.Player.Turn));
+        level.Log.Add(new LogMessage($"You gain +{(healthLost < gain ? healthLost : gain)} hp!", level.Player.Turn, ConsoleColor.Green));
     }
 }

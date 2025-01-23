@@ -6,7 +6,7 @@
         Color = ConsoleColor.Black;
         Icon = '#';
     }
-    public static void Quote()
+    public static string Quote()
     {
         string[] quotes = {
             "You thud against the cold stone.",
@@ -20,7 +20,6 @@
             "The ancient stone holds its secrets tight.",
             "Rubbing your forehead, you realize it’s a dead end."
         };
-        Log.Add(" " + Utils.GetRandom(quotes));
-        Log.AddLine();
+        return Utils.GetRandom(quotes);
     }
 }

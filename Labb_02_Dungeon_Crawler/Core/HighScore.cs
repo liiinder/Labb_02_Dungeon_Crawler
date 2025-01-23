@@ -1,19 +1,22 @@
-﻿using System.Text.Json;
+﻿using Labb_02_Dungeon_Crawler.Utils;
+using MongoDB.Bson.Serialization.Attributes;
 
-class HighScore
+[BsonIgnoreExtraElements]
+public class HighScore
 {
-    public static List<HighScore> scores = new List<HighScore>();
-
+    private static List<HighScore> Scores { get; set; }
     public int Score { get; set; }
     public string Name { get; set; }
     public string Achievement { get; set; }
+    public string Level { get; set; }
     public DateTime Time { get; set; }
 
-    public HighScore(string name, int score, string achievement, DateTime time)
+    public HighScore(string name, int score, string achievement, string level, DateTime time)
     {
         Name = name;
         Score = score;
         Achievement = achievement;
+        Level = level;
         Time = time;
     }
 
@@ -22,10 +25,10 @@ class HighScore
         int score = (player.DamageDone * 5) - (player.Turn / 2) + player.Health - player.MaxHP;
         return Math.Max(0, score);
     }
-    public static void FinalScore(LevelData level)
+    public static void FinalScore(LevelData level, List<HighScore> scores, MongoDbService database)
     {
-        string pathToFile = level.Path + "Highscores\\" + level.Level + ".dat";
-        Load(pathToFile);
+        Scores = scores;
+
         int top = Console.GetCursorPosition().Top;
         HighScore current;
 
@@ -53,43 +56,24 @@ class HighScore
             $"{(exterminator ? "Exterminator, " : "")}";
         if (bonus.Length > 0) bonus = "   " + bonus[..^2];
 
-        current = new HighScore(level.Player.Name, finalScore, bonus, DateTime.Now);
-        Save(current, pathToFile);
+        current = new HighScore(level.Player.Name, finalScore, bonus, level.Level, DateTime.Now);
+
+        Scores.Add(current);
+        Scores = Scores.OrderByDescending(x => x.Score).ToList();
+
+        database.SaveHighScore(current);
 
         Console.SetCursorPosition(0, top);
+
         Print(current);
     }
-    public static void Save(HighScore score, string path)
-    {
-        scores.Add(score);
-        scores = scores.OrderByDescending(x => x.Score).ThenBy(x => x.Time).ToList();
 
-        string jsonString = JsonSerializer.Serialize(new HighScores(scores));
-
-        using (StreamWriter writer = new StreamWriter(path, false)) writer.WriteLine(jsonString);
-    }
-    public static void Load(string path)
-    {
-        try
-        {
-            using (StreamReader reader = new StreamReader(path))
-            {
-                while (!reader.EndOfStream)
-                {
-                    string jsonString = reader.ReadLine();
-
-                    scores = JsonSerializer.Deserialize<HighScores>(jsonString).Scores;
-                }
-            }
-        }
-        catch { }
-    }
     public static void Print(HighScore score, bool all = false)
     {
         int place = 0;
-        int count = scores.Count;
+        int count = Scores.Count;
 
-        if (all) scores.Reverse();
+        if (all) Scores.Reverse();
         if (!all && count > 5) count = 5;
 
         int digits = count.ToString().Length;
@@ -106,7 +90,7 @@ class HighScore
         {
             if (all) place = count - i;
             else place = i + 1;
-            HighScore curr = scores[i];
+            HighScore curr = Scores[i];
 
             Console.Write("\n" + "".PadLeft(left));
             if (curr.Equals(score)) Console.BackgroundColor = ConsoleColor.DarkGray;
@@ -135,7 +119,6 @@ class HighScore
 };
             string message = Utils.GetRandom(thankYouMessages);
             Console.Write(message.PadLeft(Utils.PadLeftCenter(message)) + "\n");
-            Console.ReadKey(true);
         }
         else
         {
@@ -145,10 +128,4 @@ class HighScore
             if (input.Key == ConsoleKey.Spacebar) Print(score, true);
         }
     }
-}
-
-record HighScores
-{
-    public List<HighScore> Scores { get; init; }
-    public HighScores(List<HighScore> scores) => Scores = scores;
 }

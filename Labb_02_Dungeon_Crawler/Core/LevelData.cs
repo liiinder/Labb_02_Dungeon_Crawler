@@ -1,18 +1,20 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 [BsonIgnoreExtraElements]
 public class LevelData
 {
     private Queue<LevelElement> deathRow = new();
 
+    public ObjectId Id { get; set; }
     public List<LevelElement> Elements { get; set; } = new();
-    [BsonIgnore]
     public Player Player { get; set; }
     public string Path { get; set; }
     public string Level { get; set; }
+    public DateTime Saved { get; set; }
+    public List<LogMessage> Log { get; set; } = new();
 
     public LevelData() { }
-
     public LevelData(string playerName) => Player = new Player(playerName);
 
     public void LoadFile(string file)
@@ -57,25 +59,17 @@ public class LevelData
             }
         }
     }
-
     public void LoadGame(LevelData loaded)
     {
+        Id = loaded.Id;
         Elements = loaded.Elements;
-        foreach (LevelElement e in Elements)
-        {
-            if (e is Player p)
-            {
-                Player = p;
-                break;
-            }
-        }
-        Path = loaded.Path; // förmodligen inte används till detta...
+        Player = (Player)Elements.First(x => x is Player);
+        Path = loaded.Path; // förmodligen inte används till denna nu när man byter till databas...
         Level = loaded.Level;
+        Log = loaded.Log;
 
-        foreach (LevelElement e in Elements)
-        {
-            if (e.IsVisable) e.Draw();
-        }
+        Console.Clear();
+        Print.VisibleWalls(this);
     }
     public void ExecuteDeathRow()
     {
@@ -90,4 +84,13 @@ public class LevelData
         element.Draw(false);
         deathRow.Enqueue(element);
     }
+}
+
+[BsonIgnoreExtraElements]
+public class LevelDataLight
+{
+    public ObjectId id { get; set; }
+    public Player Player { get; set; }
+    public DateTime Saved { get; set; }
+    public string Level { get; set; }
 }

@@ -39,7 +39,46 @@
         Console.Write(status1);
         Console.SetCursorPosition(1, 2);
         Console.Write(status2);
+        Console.SetCursorPosition(1, 28);
+        Console.Write("Menu: ESC       Check Log: I, J");
         Console.ResetColor();
+    }
+
+    public static void Log(LevelData level, int logCheck, bool old)
+    {
+        int x = 57;
+        int y = 1;
+        ClearLog();
+
+        for (int i = 0; i < level.Log.Count; i++)
+        {
+            if (i == 28) break;
+            else if (i + 1 + logCheck > level.Log.Count) break;
+
+            LogMessage latest = level.Log[^(i + 1 + logCheck)];
+            if (old == false)
+            {
+                if (level.Player.Turn - latest.Turn > 5) break;
+            }
+
+            Console.SetCursorPosition(x, y + i);
+            Console.ForegroundColor = latest.Color;
+            Console.WriteLine(latest.Message);
+        }
+        Console.ResetColor();
+    }
+
+    private static void ClearLog()
+    {
+        int x = 57;
+        int y = 1;
+        int rows = 28;
+
+        for (int i = 0; i < rows; i++)
+        {
+            Console.SetCursorPosition(x, y + i);
+            Console.Write(new String(' ', Console.BufferWidth - x));
+        }
     }
 
     /// <summary>
@@ -151,6 +190,40 @@
         Banner(banner);
         BannerMessage(Utils.GetRandom(messages));
     }
+    public static void Saved()
+    {
+        string[] banner = [
+  "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+ "!                                                                                                 !",
+"!   @@@@@@@@   @@@@@@   @@@@@@@@@@   @@@@@@@@      @@@@@@    @@@@@@   @@@  @@@  @@@@@@@@  @@@@@@@   !",
+"!  @@@@@@@@@  @@@@@@@@  @@@@@@@@@@@  @@@@@@@@     @@@@@@@   @@@@@@@@  @@@  @@@  @@@@@@@@  @@@@@@@@  !",
+"!  !@@        @@!  @@@  @@! @@! @@!  @@!          !@@       @@!  @@@  @@!  @@@  @@!       @@!  @@@  !",
+"!  !@!        !@!  @!@  !@! !@! !@!  !@!          !@!       !@!  @!@  !@!  @!@  !@!       !@!  @!@  !",
+"!  !@! @!@!@  @!@!@!@!  @!! !!@ @!@  @!!!:!       !!@@!!    @!@!@!@!  @!@  !@!  @!!!:!    @!@  !@!  !",
+"!  !!! !!@!!  !!!@!!!!  !@!   ! !@!  !!!!!:        !!@!!!   !!!@!!!!  !@!  !!!  !!!!!:    !@!  !!!  !",
+"!  :!!   !!:  !!:  !!!  !!:     !!:  !!:               !:!  !!:  !!!  :!:  !!:  !!:       !!:  !!!  !",
+"!  :!:   !::  :!:  !:!  :!:     :!:  :!:              !:!   :!:  !:!   ::!!:!   :!:       :!:  !:!  !",
+"!   ::: ::::  ::   :::  :::     ::    :: ::::     :::: ::   ::   :::    ::::     :: ::::   :::: ::  !",
+"!   :: :: :    :   : :   :      :    : :: ::      :: : :     :   : :     :      : :: ::   :: :  :   !",
+ "!                                                                                                 !",
+  "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"];
+
+        string[] messages =
+        [
+    "Your progress is secured, hero. Ready yourself for what lies ahead.",
+    "The tale of your journey has been recorded. Adventure awaits anew!",
+    "Your deeds are etched into history. Take heart and press on!",
+    "The path you’ve walked is safe. Will you carve a new one forward?",
+    "The winds of fate pause as your story is saved. The journey continues!",
+    "Your legend is preserved for the ages. Where will it lead next?",
+    "The moment is captured. Prepare to forge onward, champion!",
+    "Your progress is safeguarded. Darkness still stirs in the distance.",
+    "The echoes of your journey are secure. The world awaits your return.",
+    "Your accomplishments are saved. Another chapter beckons!"
+];
+        Banner(banner);
+        BannerMessage(Utils.GetRandom(messages));
+    }
 
     public static void Banner(string[] banner)
     {
@@ -188,6 +261,14 @@
         {
             Console.SetCursorPosition(Utils.PadCenter(output[i]), top + i);
             Console.Write(output[i]);
+        }
+    }
+
+    public static void VisibleWalls(LevelData level)
+    {
+        foreach (LevelElement e in level.Elements)
+        {
+            if (e.IsVisable) e.Draw();
         }
     }
 

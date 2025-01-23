@@ -23,11 +23,12 @@
                 int newX = Math.Sign(level.Player.Position.X - Position.X);
                 int newY = Math.Sign(level.Player.Position.Y - Position.Y);
 
-                List<Position> newPositions = new List<Position>();
-
-                newPositions.Add(new Position(Position.X + newX, Position.Y + newY));
-                newPositions.Add(new Position(Position.X + newX, Position.Y));
-                newPositions.Add(new Position(Position.X, Position.Y + newY));
+                List<Position> newPositions =
+                [
+                    new Position(Position.X + newX, Position.Y + newY),
+                    new Position(Position.X + newX, Position.Y),
+                    new Position(Position.X, Position.Y + newY),
+                ];
 
                 foreach (Position newPos in newPositions)
                 {

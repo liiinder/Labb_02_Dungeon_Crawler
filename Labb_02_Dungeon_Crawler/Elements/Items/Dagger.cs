@@ -25,9 +25,8 @@
 
         Looted = true;
         level.Remove(this);
-        Log.Add(" " + Utils.GetRandom(messages));
-        Log.Add($" Attack upgraded from {level.Player.AttackDice} to {newDie}", ConsoleColor.Green);
-        Log.AddLine();
+        level.Log.Add(new LogMessage(Utils.GetRandom(messages), level.Player.Turn));
+        level.Log.Add(new LogMessage($"Attack upgraded from {level.Player.AttackDice} to {newDie}", level.Player.Turn, ConsoleColor.Green));
         level.Player.AttackDice = newDie; // 5 -> 20
     }
 }

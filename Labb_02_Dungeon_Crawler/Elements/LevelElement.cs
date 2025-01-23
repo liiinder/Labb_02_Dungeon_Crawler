@@ -1,7 +1,6 @@
 ﻿
 using MongoDB.Bson.Serialization.Attributes;
 
-//[BsonDiscriminator(RootClass = true)]
 [BsonKnownTypes(
     typeof(Wall),
     typeof(MovingElement),

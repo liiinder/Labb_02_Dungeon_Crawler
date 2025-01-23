@@ -1,14 +1,24 @@
 ﻿using Labb_02_Dungeon_Crawler.Utils;
 
+string connectionString = "mongodb://localhost:27017/";
+string databaseName = "KristofferLinder";
+MongoDbService database = new(connectionString, databaseName);
+
+string map = "Level1";
+//string map = "Debug";
+
+var loadData = database.GetSavedGames();
+var loadScores = database.GetHighScores(map);
+
+List<LevelDataLight> savedgames;
+List<HighScore> scores;
+
 Console.CursorVisible = false;
 Console.Clear();
 Console.BackgroundColor = ConsoleColor.Black;
 Console.ForegroundColor = ConsoleColor.Gray;
 
-//string map = "Level1";
-string map = "Debug";
-
-GameLoop game = new GameLoop();
+GameLoop game = new GameLoop(database);
 
 Print.Intro();
 int choice = Menu.StartLoop();
@@ -19,13 +29,20 @@ if (choice == 0)
     level = new LevelData(Print.NewGame());
     Console.Clear();
     level.LoadFile(map);
-    game.Start(level);
 }
 else if (choice == 1)
 {
-    var loaded = new MongoDb().LoadGame();
+    savedgames = await loadData;
+    var gameid = Menu.SavedGames(savedgames);
+    var loaded = database.LoadGame(gameid);
     level.LoadGame(loaded);
-    game.Start(level);
+}
+
+if (choice != 2)
+{
+    scores = await loadScores;
+    game.Start(level, scores);
+    Console.ReadKey(true);
 }
 
 Console.CursorVisible = true;

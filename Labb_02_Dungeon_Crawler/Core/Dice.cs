@@ -1,5 +1,4 @@
-﻿
-public class Dice
+﻿public class Dice
 {
     public int NumberOfDice { get; set; }
     public int SidesPerDice { get; set; }

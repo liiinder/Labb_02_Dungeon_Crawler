@@ -31,16 +31,15 @@
         string defending2 = (defender is Player) ? "you" : "it";
         string defenderStatus = (defender.Health > 0) ? $"for {damageTaken} dmg ({defender.Health} hp)" : $"{defending2} died!";
 
-        string message = $" {attacking} ({AttackDice} » {attackThrow}) ATK" +
+        string message = $"{attacking} ({AttackDice} » {attackThrow}) ATK" +
                        $" {defending} ({defender.DefenceDice} » {defenceThrow}) {defenderStatus}";
 
         ConsoleColor color = ConsoleColor.Yellow;
         if (this is not Player) color = (damageTaken > 0) ? ConsoleColor.Red : ConsoleColor.Green;
 
-        Log.Add(message, color);
+        level.Log.Add(new LogMessage(message, level.Player.Turn, color));
 
         if (mainAttack && defender.Health > 0) defender.Attack(this, level, mainAttack: false);
-        else Log.AddLine();
     }
     public void MoveTo(Position newPosition)
     {

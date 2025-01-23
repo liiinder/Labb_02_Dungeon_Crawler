@@ -17,12 +17,8 @@
         MaxHP = Health;
     }
 
-    public int Update(LevelData level)
+    public void Update(LevelData level, ConsoleKeyInfo input)
     {
-        ConsoleKeyInfo input = Console.ReadKey(true);
-
-        if (input.Key == ConsoleKey.Escape) return Menu.PauseLoop();
-
         Position newPosition = new Position(Position);
 
         if (input.Key == ConsoleKey.W || input.Key == ConsoleKey.UpArrow) newPosition.Y--;
@@ -33,7 +29,7 @@
         LevelElement nextElement = level.Elements.FirstOrDefault(x => x.Position.Equals(newPosition));
 
         if (nextElement is Enemy enemy) Attack(enemy, level);
-        else if (nextElement is Wall) Wall.Quote();
+        else if (nextElement is Wall) level.Log.Add(new LogMessage(Wall.Quote(), Turn));
         else if (nextElement is Item item)
         {
             item.PickUp(level);
@@ -42,6 +38,5 @@
         else MoveTo(newPosition);
 
         Turn++;
-        return (Health > 0) ? 3 : -1;
     }
 }
